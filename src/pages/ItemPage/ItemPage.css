@@ -1,10 +1,1 @@
-.text {
-  @apply font-bold;
-  font-size: 1.5rem;
-}
 
-.test-button {
-  /* GitHub CoPilot suggest me เก่งชิบหาย */
-  @apply flex items-center justify-center;
-  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
-}
