@@ -1,54 +1,15 @@
 import React from 'react';
 import { Button } from 'antd';
 import './ItemPage.css';
-import { db, auth } from "../../firebase";
-  import {
-    getAuth,
-    getRedirectResult,
-    GoogleAuthProvider,
-    onAuthStateChanged
-  } from "firebase/auth";
-
-  import { collection, addDoc } from "firebase/firestore"; 
-
-
+import { addTask, checkUserStatus } from "../../firebase";
 export function ItemPage() {
 
   const [content, setContent] = React.useState('')
-  // const auth = getAuth();
 
-    onAuthStateChanged(auth, (user) => {
-    if (user){
-      console.log('still signed in');
-    } else {
-      console.log('was signed out');
-    }
-  })
+  checkUserStatus()
 
     const handleAdd = async () => {
-      console.log("handle add");
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          console.log("user valid");
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          const uid = user.uid;
-          try {
-            console.log(uid);
-            const docRef = await addDoc(collection(db, "users", uid, "task"), {
-              content: content
-            })
-            console.log("Document written with ID: ", docRef.id);
-          } catch (e) {
-            console.log(e.message);
-          }
-
-        } else {
-          // User is signed out
-          console.log("user not valid");
-        }
-      });
-
+      addTask(content)
     }
 
 
