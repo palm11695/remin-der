@@ -1,0 +1,32 @@
+.text {
+    @apply font-bold;
+    font-size: 1.5rem;
+    @apply m-2;
+}
+
+.add-task {
+    width: 375px;
+    height: 812px;
+    @apply border border-gray-300 rounded-lg;
+    @apply flex flex-col items-center justify-center; 
+
+}
+
+.add-task-name {
+    @apply rounded-lg m-2;
+    max-width: 337px;
+}
+
+.add-task-des {
+    @apply rounded-lg m-2;
+    max-width: 337px;
+    height: 500px
+}
+
+.test-button{
+    @apply m-2;
+}
+
+.ant-input{
+    @apply rounded-lg !important;
+}
