@@ -25,10 +25,6 @@ export function ItemPage() {
         <textarea className='border border-black block' value={content} onChange={(e) => handleTextChange(e)}></textarea>
         <button className='button p-4 border-blue bg-blue-700 w-[150px] rounded mt-4 text-white' onClick={handleAdd}>Submit</button>
       </div>
-      {/*
-        You can see document of each component in https://ant.design/components/overview/ 
-        eg. Button https://ant.design/components/button/
-      */}
     </div>
   );
 }
