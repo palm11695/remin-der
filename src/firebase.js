@@ -1,6 +1,15 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  updateDoc,
+  query,
+  getDocs,
+  deleteDoc,
+  getDoc,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
   getAuth,
@@ -30,6 +39,36 @@ export const auth = getAuth();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
+export const getAllTask = async () => {
+  console.log("handle get");
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("user valid");
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      try {
+        console.log("user id: ", uid);
+        const q = query(
+          collection(db, "users", uid, "task")
+        );
+        const allTask = (await getDocs(q)).docs.map((e) => (e = e.data()));
+        if (allTask.length === 0){
+          console.log("no task");
+        } else {
+          console.log("task retreive")
+        }
+        return allTask
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
+      // User is signed out
+      console.log("user not valid");
+    }
+  });
+}
+
 export const addTask = async (content) => {
   console.log("handle add");
   onAuthStateChanged(auth, async (user) => {
@@ -41,7 +80,7 @@ export const addTask = async (content) => {
       try {
         console.log("user id: ", uid);
         const docRef = await addDoc(collection(db, "users", uid, "task"), {
-          content: content,
+          content
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
@@ -49,6 +88,98 @@ export const addTask = async (content) => {
       }
     } else {
       // User is signed out
+      console.log("user not valid");
+    }
+  });
+};
+
+
+export const editTask = async (docId, content) => {
+  console.log("handle edit");
+  onAuthStateChanged(auth, async (user) => {
+    if (user){
+      console.log("user valid");
+      const uid = user.uid
+      try {
+        console.log("user id: ", uid)
+        const docRef = await updateDoc(collection(db, "users", uid, "tasks", docId), {
+          content
+        })
+        console.log("Document update with ID: ", docRef.id);
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
+      console.log("user not valid");
+    }
+  })
+  
+}
+
+export const softDeleteTask = async (docId) => {
+  console.log("handle soft delete");
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("user valid");
+      const uid = user.uid;
+      try {
+        console.log("user id: ", uid);
+        const docRef = await getDoc(collection(db, "users", uid, "tasks", docId));
+        const data = docRef.data()
+        await addDoc(collection(db, "users", uid, "deletes", docId), {
+          data
+        });
+        await deleteDoc(collection(db, "users", uid, "tasks", docId));
+        console.log("Document soft delete with ID: ", docRef.id);
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
+      console.log("user not valid");
+    }
+  });
+};
+
+export const restoreDeleteTask = async (docId) => {
+  console.log("handle restore delete");
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("user valid");
+      const uid = user.uid;
+      try {
+        console.log("user id: ", uid);
+        const docRef = await getDoc(
+          collection(db, "users", uid, "deletes", docId)
+        );
+        const data = docRef.data();
+        await addDoc(collection(db, "users", uid, "tasks", docId), {
+          data,
+        });
+        await deleteDoc(collection(db, "users", uid, "deletes", docId));
+        console.log("Document restore delete with ID: ", docRef.id);
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
+      console.log("user not valid");
+    }
+  });
+};
+
+export const hardDeleteTask = async (docId) => {
+  console.log("handle hard delete");
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("user valid");
+      const uid = user.uid;
+      try {
+        console.log("user id: ", uid);
+        const docRef = await deleteDoc(collection(db, "users", uid, "deletes", docId));
+        console.log("Document hard delete with ID: ", docRef.id);
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
       console.log("user not valid");
     }
   });
