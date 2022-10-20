@@ -2,7 +2,7 @@
   @apply font-medium;
   font-size: 1rem;
   align-self: start;
-  @apply m-3;
+  @apply mt-5 mb-0 !important;
 }
 
 .homepage {
@@ -10,10 +10,17 @@
   height: 812px;
   @apply border border-gray-300 rounded-lg;
   @apply flex flex-col items-center;
+
+  /* Comment: For website  */
+  /* @apply absolute;
+  inset-inline: 40%;
+  inset-block: 5% */
 }
 
-.home-task-des {
-  @apply rounded-lg m-2 max-w-xs !important;
+
+.log-out-task {
+  @apply border-none drop-shadow-none ml-20 left-12 !important; 
+
 }
 
 .home-task-srt {
@@ -55,5 +62,10 @@
 }
 
 .task-fsn {
-  @apply absolute top-5 right-0 w-10 !important;
+  @apply absolute top-4 right-10 w-0 !important;
+}
+
+.task-fn-mark {
+  @apply absolute top-10 right-1 italic;
+  color: grey;
 }

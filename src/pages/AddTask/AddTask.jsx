@@ -1,10 +1,5 @@
 import React from "react";
-import { Button } from "antd";
-import { Cascader } from 'antd';
-import { Divider } from "antd";
-import { DatePicker } from 'antd';
-import { Input } from "antd";
-import { Tag } from "antd";
+import { Button, Upload, Cascader, Divider, Input, Tag, UploadOutlined, DatePicker, TimePicker } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import './AddTask.css';
 import './CustDes.css';
@@ -35,7 +30,7 @@ export function AddTask() {
 
   return (
     <div className="add-task">
-
+      <div className="add-task-info">
       <Divider orientation="left">Title</Divider>
       <Input
         className="add-task-name"
@@ -52,8 +47,11 @@ export function AddTask() {
       </div>
 
       <Divider orientation="left">Deadline</Divider>
-      <DatePicker onChange={onChange} />
-
+      <div className="dl-task">
+        <DatePicker className="dl-task-date" onChange={onChange} />
+        <TimePicker className="dl-task-time" use12Hours format="h:mm A" onChange={onChange} />
+      </div>
+      
       <Divider orientation="left">Reminder</Divider>
       <Cascader 
         placeholder="Select Time"
@@ -62,8 +60,7 @@ export function AddTask() {
       />
 
       <Divider orientation="left">Description</Divider>
-
-      <span className="Controls">
+      <span className="str-cont-des">
         <Button className="str-bold"><strong>B</strong></Button>
         <Button className="str-em"><em>I</em></Button>
         <Button className="str-u"><u>U</u></Button>
@@ -72,12 +69,15 @@ export function AddTask() {
       <TextArea
         className="add-task-des"
         // style={{ width: 337 }}
-        autoSize={{ minRows: 6, maxRows: 6 }}
+        autoSize={{ minRows: 4, maxRows: 4 }}
         placeholder="Add Description"
         value={taskDes}
         onChange={handleDes}
       />
-
+      <Upload>
+        <Button className="add-task-upload"> <UploadOutlined /> Click to Upload </Button>
+      </Upload>
+      </div>
       <Button className="cancel-button" type="defualt" onClick={handleClick} >Cancel</Button>
       <Button className="add-button" type="defualt" onClick={handleClick} >Add</Button>
 

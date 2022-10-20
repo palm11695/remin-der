@@ -1,13 +1,6 @@
 import React from 'react';
+import { Divider, Cascader, Button, Card, Tag, Checkbox } from "antd";
 import './HomePage.css';
-
-import { Divider } from "antd";
-import { Cascader } from "antd";
-import { Button } from "antd";
-import { Card } from "antd";
-import { Tag } from "antd";
-import { Checkbox } from 'antd';
-import TextArea from "antd/lib/input/TextArea";
 
 
 export function HomePage() {
@@ -20,14 +13,13 @@ export function HomePage() {
 
   return (
     <div className="homepage">
-      <div className="text"> Remind-เด้อ </div>
+      <div className="text text-2xl" > 
+        <text>Remind-เด้อ </text>
+        <Button className='log-out-task' onChange={onChange}> <u>Logout</u> </Button>
+      </div>
 
-      <Divider orientation="left">Feature Future</Divider>
-      <TextArea
-        className="home-task-des"
-        autoSize={{ minRows: 2, maxRows: 2 }}
-        placeholder="Feature Future"
-      />
+      <Divider orientation="left"></Divider>
+      <div className='text-base italic'> Welcome to "<b>Name</b>" Calendar! </div>
       
       <Divider orientation="left">Sort:</Divider>
       <Cascader
@@ -47,7 +39,8 @@ export function HomePage() {
             description="02/02/2000 - 18.00 PM"
           />
           <Tag className='side-tag' color="blue">TA</Tag>
-          <Checkbox className='task-fsn' onChange={onChange}></Checkbox> 
+          <Checkbox className='task-fsn' onChange={onChange} ></Checkbox>
+          <text className='task-fn-mark' disabled> Mark as done </text>
         </Card>
 
         <Card className='defu-card'>
@@ -56,7 +49,8 @@ export function HomePage() {
             description="Dateline: 18.00 PM"
           />
           <Tag className='side-tag' color="red">High School</Tag>
-          <Checkbox className='task-fsn' onChange={onChange}></Checkbox> 
+          <Checkbox className='task-fsn' onChange={onChange}></Checkbox>
+          <text className='task-fn-mark' disabled> Mark as done </text> 
         </Card>
         
       </div>
