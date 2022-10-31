@@ -1,0 +1,15 @@
+.add-task-des {
+    @apply rounded-lg m-2 max-w-xs !important;
+}
+
+.str-bold {
+    @apply mr-2;
+}
+
+.str-em {
+    @apply mr-2;
+}
+    
+.str-u {
+    @apply mr-2;
+}
