@@ -1,10 +1,71 @@
 .text {
-  @apply font-bold;
-  font-size: 1.5rem;
+  @apply font-medium;
+  font-size: 1rem;
+  align-self: start;
+  @apply mt-5 mb-0 !important;
 }
 
-.test-button {
-  /* GitHub CoPilot suggest me เก่งชิบหาย */
-  @apply flex items-center justify-center;
-  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+.homepage {
+  width: 375px;
+  height: 812px;
+  @apply border border-gray-300 rounded-lg;
+  @apply flex flex-col items-center;
+
+  /* Comment: For website  */
+  /* @apply absolute;
+  inset-inline: 40%;
+  inset-block: 5% */
+}
+
+
+.log-out-task {
+  @apply border-none drop-shadow-none ml-20 left-12 !important; 
+
+}
+
+.home-task-srt {
+  @apply rounded-lg m-2 max-w-xs !important;
+}
+
+.new-task-button {
+  @apply bottom-px m-5 w-80 box-border h-11 w-80 inline-block px-6 py-2.5 bg-black text-white rounded-lg !important;
+} 
+
+.new-task-button:hover {
+  @apply bg-neutral-800 !important;
+}
+
+.side-page {
+  width: 90%;
+  height: 90%;
+  /* @apply border border-gray-300 rounded-lg; */
+}
+
+.defu-card {
+  @apply w-60 mt-3 ml-20 !important;
+  /* margin-left: 20% !important; */
+}
+
+/* card format */
+.ant-card-meta-title {
+  @apply mb-0 text-base !important;
+}
+
+.ant-card-body {
+  @apply px-4 py-2 text-xs !important;
+}
+/* --- end --- */
+
+
+.side-tag {
+  @apply mt-2 !important;
+}
+
+.task-fsn {
+  @apply absolute top-4 right-10 w-0 !important;
+}
+
+.task-fn-mark {
+  @apply absolute top-10 right-1 italic;
+  color: grey;
 }
