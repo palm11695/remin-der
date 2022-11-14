@@ -9,14 +9,26 @@ import {
   DatePicker,
   TimePicker,
   Tooltip,
+  Modal,
+  Space,
 } from "antd";
+import { Navigate } from "react-router-dom";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import "./AddTask.css";
 import "./CustDes.css";
+import {
+  signInWithGoogle,
+  signOutWithGoogle,
+  checkUserStatus,
+} from "../../firebase";
+
+import Heading from '../../components/Heading'
 
 // import { tasks } from "./dummy";
 
 export function AddTask() {
+  const auth = checkUserStatus();
   const tasks = [
     {
       id: "udahfrghs9fhg", //DocRef.id
@@ -122,23 +134,34 @@ export function AddTask() {
     console.log(taskDes);
   };
 
+  const { confirm } = Modal;
+
+  const handleCancelModal = () => {
+    return confirm({
+      title: "Are you sure delete this task?",
+      icon: <ExclamationCircleOutlined />,
+      content: "You can restore it later",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        console.log("OK");
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  }
+
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
 
   return (
     <div className="w-full p-8">
+      {!auth && <Navigate to="/login" />}
       <div className="flex flex-col gap-2 max-w-sm mx-auto">
-        <div className="flex flex-row w-full items-center justify-between">
-          <text className="font-bold text-xl">Remind-เด้อ </text>
-          <Button
-            className="bg-red-700 text-white rounded-xl hover:bg-red-500 border-red-700 border-none hover:text-white"
-            type="primart"
-            onChange={onChange}
-          >
-            Logout
-          </Button>
-        </div>
+        <Heading />
         <Divider orientation="left">Title</Divider>
         <Input
           className="w-full"
@@ -259,7 +282,7 @@ export function AddTask() {
           <Button
             className="bg-red-700 hover:bg-red-500 text-white h-[50px] rounded-lg border-none w-full"
             type="primary"
-            onClick={handleClick}
+            onClick={handleCancelModal}
           >
             Cancel
           </Button>

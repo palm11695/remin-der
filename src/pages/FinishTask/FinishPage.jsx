@@ -1,14 +1,19 @@
 import React, {useState, useRef, useEffect} from "react";
 import { Divider, Cascader, Button, Card, Tag, Checkbox, Input, Tooltip } from "antd";
-import "./HomePage.css";
 import { PresetColorTypes } from "antd/lib/_util/colors";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Navigate } from 'react-router-dom'
-import Heading from '../../components/Heading'
-// import { checkUserStatus } from "../../firebase";
+import {
+  signInWithGoogle,
+  signOutWithGoogle,
+  checkUserStatus,
+} from "../../firebase";
 
-export function HomePage() {
-  // console.log(checkUserStatus());
+import Heading from '../../components/Heading'
+
+export function FinishPage() {
+  const auth = checkUserStatus();
+  console.log(auth);
   const tasks = [
     {
       id: "udahfrghs9fhg", //DocRef.id
@@ -175,93 +180,28 @@ export function HomePage() {
 
   return (
     <div className="w-full p-8 h-[100vh]">
+      {!auth && <Navigate to="/login" />}
       <div className="flex flex-col max-w-sm mx-auto gap-6 h-full">
         <Heading/>
         <div className="flex flex-row justify-center items-center gap-2">
           <a href="/">
-          <Button >Pending</Button>
+            <Button>Pending</Button>
           </a>
           <a href="/finish">
-          <Button>Finished</Button>
+            <Button>Finished</Button>
           </a>
           <a href="/delete">
-          <Button>Recently Deleted</Button>
+            <Button>Recently Deleted</Button>
           </a>
-        </div>
-        <div>
-          <Divider orientation="left">Filter</Divider>
-          <div className="flex flex-row flex-wrap gap-2 border p-4 h-[8vh] overflow-y-scroll">
-            {tags.map((tag, index) => {
-              if (editInputIndex === index) {
-                return (
-                  <Input
-                    ref={editInputRef}
-                    key={tag}
-                    size="small"
-                    className="h-fit"
-                    value={editInputValue}
-                    onChange={handleEditInputChange}
-                    onBlur={handleEditInputConfirm}
-                    onPressEnter={handleEditInputConfirm}
-                  />
-                );
-              }
-              const isLongTag = tag.length > 20;
-              const tagElem = (
-                <Tag
-                  className=""
-                  key={tag}
-                  closable
-                  onClose={() => handleClose(tag)}
-                >
-                  <span
-                    onDoubleClick={(e) => {
-                      if (index !== 0) {
-                        setEditInputIndex(index);
-                        setEditInputValue(tag);
-                        e.preventDefault();
-                      }
-                    }}
-                  >
-                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                  </span>
-                </Tag>
-              );
-              return isLongTag ? (
-                <Tooltip title={tag} key={tag}>
-                  {tagElem}
-                </Tooltip>
-              ) : (
-                tagElem
-              );
-            })}
-            {inputVisible && (
-              <Input
-                ref={inputRef}
-                type="text"
-                size="small"
-                className="h-fit"
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleInputConfirm}
-                onPressEnter={handleInputConfirm}
-              />
-            )}
-            {!inputVisible && (
-              <Tag className="h-fit" onClick={showInput}>
-                New Tag +
-              </Tag>
-            )}
-          </div>
         </div>
 
         <div>
-          <Divider orientation="left">Tasks</Divider>
+          <Divider orientation="left">Finished Tasks</Divider>
           {/* Why it cannot display 2 top card?? */}
-          <div className="w-full flex flex-col gap-2 items-center justify-center h-[50vh] overflow-y-scroll">
+          <div className="w-full flex flex-col gap-2 items-center justify-center h-[65vh] overflow-y-scroll">
             {tasks.map((task) => {
               return (
-                <Card className="w-[90%] h-fit" key={task.id}>
+                <Card className="w-[90%] h-fit">
                   <Meta
                     title={task.data.title}
                     description={`${
@@ -290,12 +230,6 @@ export function HomePage() {
                       </Tag>
                     );
                   })}
-
-                  <Checkbox className="task-fsn" onChange={onChange}></Checkbox>
-                  <text className="task-fn-mark" disabled>
-                    {" "}
-                    Mark as done{" "}
-                  </text>
                 </Card>
               );
             })}
@@ -309,7 +243,6 @@ export function HomePage() {
             + Add new Task
           </Button>
         </a>
-
       </div>
     </div>
   );

@@ -23,12 +23,12 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBY8A-cNp3N2hqZ5FccLbHBR53ZSEz-ojI",
-  authDomain: "reminder-se.firebaseapp.com",
-  projectId: "reminder-se",
-  storageBucket: "reminder-se.appspot.com",
-  messagingSenderId: "703603214281",
-  appId: "1:703603214281:web:31f8911434405c637b4a18",
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_sorageBucket,
+  messagingSenderId: process.env.REACT_APP_messageSenderId,
+  appId: process.env.REACT_APP_appId,
 };
 
 // Initialize Firebase
@@ -185,41 +185,54 @@ export const hardDeleteTask = async (docId) => {
   });
 };
 
-export const checkUserStatus = () => {
+export const checkUserStatus = async () => {
+  let isSignedIn = false;
+  console.log("start function");
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("still signed in");
+      isSignedIn = true;
     } else {
       console.log("was signed out");
     }
   });
+  
+  return isSignedIn;
+
+  // On dev env
+  // return true
 };
 
 export const signInWithGoogle = async () => {
-  await signInWithRedirect(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      console.log("signed in success");
-      const user = result.user;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      console.log("error occured when signed in");
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
+  const aauth = await signInWithRedirect(auth, provider)
+    // .then((result) => {
+    //   // This gives you a Google Access Token. You can use it to access the Google API.
+    //   const credential = GoogleAuthProvider.credentialFromResult(result);
+    //   const token = credential.accessToken;
+    //   // The signed-in user info.
+    //   console.log("signed in success");
+    //   const user = result.user;
+    //   sessionStorage.setItem("user", JSON.stringify(user));
+    //   // ...
+    // })
+    // .catch((error) => {
+    //   // Handle Errors here.
+    //   const errorCode = error.code;
+    //   const errorMessage = error.message;
+    //   // The email of the user's account used.
+    //   const email = error.customData.email;
+    //   console.log("error occured when signed in");
+    //   // The AuthCredential type that was used.
+    //   const credential = GoogleAuthProvider.credentialFromError(error);
+    //   // ...
+    // }).finally(() => {
+    //   console.log("end function");
+    // });
+    // console.log("auth", aauth);
 };
 
 export const signOutWithGoogle = async () => {
   await signOut(auth);
+  sessionStorage.removeItem("user");
   console.log("signed out");
 };

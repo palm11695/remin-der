@@ -1,32 +1,47 @@
-import React from 'react';
-import { Button } from 'antd';
-import './LoginPage.css';
-import { signInWithGoogle, signOutWithGoogle, checkUserStatus } from "../../firebase";
-
+import React, {useEffect} from "react";
+import { Button } from "antd";
+import "./LoginPage.css";
+import {
+  signInWithGoogle,
+  signOutWithGoogle,
+  checkUserStatus,
+} from "../../firebase";
+import { Navigate } from "react-router-dom";
 
 export function LoginPage() {
-
-  checkUserStatus()
+  // const auth = checkUserStatus().then((e) => { return e })
+  const auth = sessionStorage.getItem("user");
+  console.log(auth);
 
   const handleSignIn = async () => {
-    signInWithGoogle()
-  }
+    await signInWithGoogle();
+  };
 
   const handleSignOut = async () => {
-    signOutWithGoogle()
-  }
-
+    await signOutWithGoogle();
+  };
 
   return (
     // for example
-    <div className="Login">
-      <div className="text">Remindเด้อ</div>
-      {/*
+    <div className="w-full h-[100vh]">
+      {auth && <Navigate to="/" />}
+      <div className="flex flex-col gap-2 max-w-sm mx-auto items-center justify-center h-full">
+        <div className="text-center text-xl font-bold">Remind เด้อ</div>
+        {/*
         You can see document of each component in https://ant.design/components/overview/ 
         eg. Button https://ant.design/components/button/
       */}
-      <button className='button p-4 border-blue bg-blue-700 w-[150px] rounded mt-4 text-white block' onClick={handleSignIn}>Sign In</button>
-      <button className='button p-4 border-red bg-red-700 w-[150px] rounded mt-4 text-white' onClick={handleSignOut}>Sign Out</button>
+        <Button
+          className="p-4 border-blue bg-blue-700 w-[150px] rounded text-white h-[50px]"
+          type="primary"
+          onClick={handleSignIn}
+        >
+          Sign In
+        </Button>
+        <Button onClick={handleSignOut}>
+          Sign Out
+        </Button>
+      </div>
     </div>
   );
 }
