@@ -17,9 +17,6 @@ export function LoginPage() {
     await signInWithGoogle();
   };
 
-  const handleSignOut = async () => {
-    await signOutWithGoogle();
-  };
 
   return (
     // for example
@@ -32,14 +29,14 @@ export function LoginPage() {
         eg. Button https://ant.design/components/button/
       */}
         <Button
-          className="p-4 border-blue bg-blue-700 w-[150px] rounded text-white h-[50px]"
+          className=" border-blue bg-blue-700 w-[150px] rounded-lg text-white h-[50px]"
           type="primary"
           onClick={handleSignIn}
         >
-          Sign In
-        </Button>
-        <Button onClick={handleSignOut}>
-          Sign Out
+          <div className="flex flex-row items-center justify-center gap-2">
+            Sign In with
+            <img src="icons8-google-48.png" className="h-[24px]"/>
+          </div>
         </Button>
       </div>
     </div>

@@ -8,7 +8,6 @@ import { Button } from 'antd';
 import { Navigate } from 'react-router-dom'
 
 export default function Heading(){
-    // const auth = sessionStorage.getItem('user')
     return (
         <div>
             {/* {!auth && <Navigate to="/login" />} */}
