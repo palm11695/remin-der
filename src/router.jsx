@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Loading from '../src/components/Loading';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase';
-import { HomePage, AddTask, LoginPage } from './pages';
+import { HomePage, AddTask, LoginPage, FinishPage } from './pages';
 
 export default function AppRouter() {
   const [user, loading, error] = useAuthState(auth);
