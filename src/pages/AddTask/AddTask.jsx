@@ -2,23 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Upload,
-  Cascader,
   Divider,
+  Dropdown,
   Input,
   Tag,
   DatePicker,
-  TimePicker,
   Tooltip,
   Modal,
   Space,
 } from "antd";
 import { Navigate } from "react-router-dom";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined, DownOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
-  signInWithGoogle,
-  signOutWithGoogle,
   checkUserStatus,
+  addTask,
+  auth
 } from "../../firebase";
 
 import Heading from '../../components/Heading'
@@ -26,7 +25,7 @@ import Heading from '../../components/Heading'
 // import { tasks } from "./dummy";
 
 export function AddTask() {
-  const auth = checkUserStatus();
+  // const auth = checkUserStatus();
   const tasks = [
     {
       id: "udahfrghs9fhg", //DocRef.id
@@ -68,12 +67,27 @@ export function AddTask() {
 
   const [task, setTask] = React.useState("");
   const [taskDes, setDes] = React.useState("");
+  const [date, setDate] = React.useState("");
+  const [reminder, setReminder] = React.useState({"time": "None"});
   // const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
-  const opt_remin = [
-    { value: "", label: "None" },
-    { value: "30 min", label: "30 min" },
-    { value: "1 hours", label: "1 hours" },
+
+  const items = [
+    { key: "None", label: "None" },
+    { key: "30 min", label: "30 min" },
+    { key: "1 hours", label: "1 hours" },
+    { key: "2 hours", label: "2 hours" },
   ];
+  const handleReminderDateClick = (e) => {
+    console.log(e.key);
+    setReminder({
+      ...reminder,
+      "time": e.key
+    })
+  };
+  const menuProps = {
+    items,
+    onClick: handleReminderDateClick,
+  };
 
   const [tags, setTags] = useState([]);
   const [inputVisible, setInputVisible] = useState(false);
@@ -152,8 +166,42 @@ export function AddTask() {
   }
 
   function onChange(date, dateString) {
+    setDate(dateString);
     console.log(date, dateString);
   }
+
+  function handleReminder(value) {
+    setReminder(value);
+    console.log(`selected ${value}`);
+  }
+
+  const dum = [
+    {
+      id: "udahfrghs9fhg", //DocRef.id
+      data: {
+        title: "Task 1",
+        description:
+          "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
+        deadline: new Date(),
+        reminder: new Date(),
+        tags: ["uni", "see"],
+        status: "ongoing",
+      },
+    },
+  ]
+
+  const handleAdd = async () => {
+    await addTask({
+      data: {
+        title: task,
+        description: taskDes,
+        deadline: new Date(date).toString(),
+        reminder: reminder.time,
+        tags: tags,
+        status: "ongoing",
+      },
+    });
+  };
 
   return (
     <div className="w-full p-8">
@@ -235,22 +283,25 @@ export function AddTask() {
 
         <Divider orientation="left">Deadline</Divider>
         <div className="flex flex-row justify-around items-center">
-          <DatePicker className="dl-task-date" onChange={onChange} />
-          <TimePicker
-            className="dl-task-time"
-            use12Hours
-            format="h:mm A"
-            onChange={onChange}
-          />
+          <DatePicker showTime onChange={onChange} placement="bottomRight" />
         </div>
 
         <Divider orientation="left">Reminder</Divider>
         <div className="flex flex-row justify-center items-center">
-          <Cascader
+          <Dropdown menu={menuProps} className="w-[100px]" trigger="click">
+            <Button>
+              <Space className="flex flex-row items-center justify-center">
+                {reminder.time}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+          {/* <Cascader
             placeholder="Select Time"
             options={opt_remin}
             changeOnSelect
-          />
+            onChange={(e) => handleReminder(e.target.value)}
+          /> */}
         </div>
         <Divider orientation="left">Description</Divider>
         <span className="flex flex-row items-center justify-center gap-1 mt-0">
@@ -287,7 +338,7 @@ export function AddTask() {
           <Button
             className="bg-black hover:bg-gray-800 h-[50px] rounded-lg border-none w-full"
             type="primary"
-            onClick={handleClick}
+            onClick={handleAdd}
           >
             Add
           </Button>
