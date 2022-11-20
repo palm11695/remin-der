@@ -157,9 +157,9 @@ export function AddTask() {
 
   const handleAdd = async () => {
     await addTask({
-        title: task,
-        description: taskDes,
-        deadline: new Date(date).toString(),
+        title: task || "Untitled",
+        description: taskDes || "No description",
+        deadline:  date == "" ? new Date().toString(): new Date(date).toString(),
         reminder: reminder.time,
         tags: tags,
         status: "ongoing",

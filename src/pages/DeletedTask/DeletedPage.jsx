@@ -15,7 +15,8 @@ import { Heading, AddTaskButton, PageSelection } from "../../components";
 import { getFirestore, collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { addTask, app, db, auth, setTaskToDone } from "../../firebase";
+import { addTask, app, db, auth, restoreDeleteTask, hardDeleteTask} from "../../firebase";
+import { UndoOutlined, DeleteOutlined } from "@ant-design/icons";
 // import { checkUserStatus } from "../../firebase";
 
 export function DeletedPage() {
@@ -77,6 +78,14 @@ export function DeletedPage() {
     setEditInputIndex(-1);
     setInputValue("");
   };
+
+  const handleRestore = (id) => {
+    restoreDeleteTask(id)
+  }
+
+  const handleDelete = (id) => {
+    hardDeleteTask(id)
+  }
 
   return (
     <div className="w-full h-full max-w-sm">
@@ -153,38 +162,50 @@ export function DeletedPage() {
                 {tasks.docs.map((task) => {
                   return (
                     <Card className="w-[90%] h-fit min-h-[75px]" key={task.id}>
-                      <Meta
-                        title={task.data().title}
-                        description={`${
-                          new Date(task.data().deadline).getDate() +
-                          "/" +
-                          new Date(task.data().deadline).getMonth() +
-                          "/" +
-                          new Date(task.data().deadline).getFullYear()
-                        } - ${
-                          new Date(task.data().deadline).getHours() +
-                          ":" +
-                          new Date(task.data().deadline).getMinutes()
-                        }`}
-                      />
-                      {task.data().tags && (
-                        <>
-                          {task.data().tags.map((tag) => {
-                            return (
-                              <Tag
-                                className="mt-2"
-                                color={
-                                  PresetStatusColorTypes[
-                                    Math.round(Math.random() * 100, 0) % 13
-                                  ]
-                                }
-                              >
-                                {tag}
-                              </Tag>
-                            );
-                          })}
-                        </>
-                      )}
+                      <div className="flex flex-row ">
+                        <div className="flex-grow">
+                          <Meta
+                            title={task.data().title}
+                            description={`${
+                              new Date(task.data().deadline).getDate() +
+                              "/" +
+                              new Date(task.data().deadline).getMonth() +
+                              "/" +
+                              new Date(task.data().deadline).getFullYear()
+                            } - ${
+                              new Date(task.data().deadline).getHours() +
+                              ":" +
+                              new Date(task.data().deadline).getMinutes()
+                            }`}
+                          />
+                          {task.data().tags && (
+                            <>
+                              {task.data().tags.map((tag) => {
+                                return (
+                                  <Tag
+                                    className="mt-2"
+                                    color={
+                                      PresetStatusColorTypes[
+                                        Math.round(Math.random() * 100, 0) % 13
+                                      ]
+                                    }
+                                  >
+                                    {tag}
+                                  </Tag>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                        <div className="flex flex-row gap-2 items-center justify-center">
+                          <Button onClick={() => handleRestore(task.id)}>
+                            <UndoOutlined />
+                          </Button>
+                          <Button onClick={() => handleDelete(task.id)}>
+                            <DeleteOutlined />
+                          </Button>
+                        </div>
+                      </div>
                     </Card>
                   );
                 })}

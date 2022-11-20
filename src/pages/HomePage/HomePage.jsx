@@ -18,13 +18,23 @@ import { Heading, AddTaskButton, PageSelection } from "../../components";
 import { getFirestore, collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { addTask, app, db, auth, setTaskToDone } from "../../firebase";
+import {
+  addTask,
+  app,
+  db,
+  auth,
+  setTaskToDone,
+  softDeleteTask,
+} from "../../firebase";
+import "medium-editor/dist/css/themes/default.css";
+import "medium-editor/dist/css/medium-editor.css";
+import Editor from "react-medium-editor";
 // import { checkUserStatus } from "../../firebase";
 
 export function HomePage() {
   // console.log(checkUserStatus());
   const [user, authLoading, authError] = useAuthState(auth);
-  const [content, setContent] = React.useState({ content: "" });
+  const [content, setContent] = React.useState("");
   const [tasks, loading, error] = useCollection(
     query(
       collection(db, "users", user.uid, "tasks"),
@@ -51,11 +61,14 @@ export function HomePage() {
 
   const [modalLoading, setModalLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const showModal = (data) => {
+  const showModal = (data, id) => {
     setContent({
       ...content,
-      content: data,
+      content: { 
+        "id": id, 
+        "data": data },
     });
+    console.log(content);
     setOpenModal(true);
   };
   const handleOk = () => {
@@ -69,6 +82,10 @@ export function HomePage() {
     setOpenModal(false);
   };
 
+  const handleDelete = (id) => {
+    setOpenModal(false);
+    softDeleteTask(id);
+  };
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -183,7 +200,7 @@ export function HomePage() {
                     <Card
                       className="w-[90%] h-fit min-h-[75px] hover:cursor-pointer hover:shadow-xl transition-all"
                       key={task.id}
-                      onClick={() => showModal(task.data())}
+                      onClick={() => showModal(task.data(), task.id)}
                     >
                       <Meta
                         title={task.data().title}
@@ -220,7 +237,10 @@ export function HomePage() {
 
                       <Checkbox
                         className="task-fsn"
-                        onClick={() => onCheckBoxTick(task.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onCheckBoxTick(task.id)
+                        }}
                       ></Checkbox>
                       <p className="task-fn-mark" disabled>
                         {" "}
@@ -233,20 +253,14 @@ export function HomePage() {
             )}
           </div>
         </div>
-        <a href="/add">
-          <Button
-            className="box-border h-11 sm:max-w-sm w-full inline-block px-6 py-2.5 bg-black text-white rounded-lg fixed bottom-4"
-            type="primary"
-          >
-            + Add new Task
-          </Button>
-        </a>
       </div>
 
       <AddTaskButton />
+      {content && (
+
       <Modal
         open={openModal}
-        title={content.content.title}
+        title={content.content.data.title || "No title"}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
@@ -256,17 +270,35 @@ export function HomePage() {
           <Button
             key="submit"
             type="danger"
-            className="bg-blue-500 text-white rounded-xl hover:bg-blue-300 border-blue-500 border-none hover:text-white"
+            className="bg-red-500 text-white rounded-xl hover:bg-red-300 border-red-500 border-none hover:text-white"
             loading={loading}
-            onClick={handleOk}
+            onClick={() => handleDelete(content.content.id)}
           >
-            Edit
+            Delete
           </Button>,
         ]}
       >
-        <p>{new Date(content.content.deadline).toString()}</p>
-        <p>{content.content.description}</p>
+        <p className="pb-4">{`${
+          new Date(content.content.data.deadline).getDate() +
+          "/" +
+          new Date(content.content.data.deadline).getMonth() +
+          "/" +
+          new Date(content.content.data.deadline).getFullYear()
+        } - ${
+          new Date(content.content.data.deadline).getHours() +
+          ":" +
+          new Date(content.content.data.deadline).getMinutes()
+        }` || "No time"}</p>
+        <Editor
+          className="show-editor"
+          text={content.content.description}
+          options={{
+            disableEditing: true,
+            placeholder: false,
+          }}
+        />
       </Modal>
+      )}
     </div>
   );
 }
