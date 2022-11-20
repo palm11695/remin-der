@@ -5,10 +5,10 @@ import { PresetColorTypes } from "antd/lib/_util/colors";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Navigate } from 'react-router-dom'
 import Heading from '../../components/Heading'
-import { getFirestore, collection, query } from "firebase/firestore";
+import { getFirestore, collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { addTask, app, db, auth } from "../../firebase";
+import { addTask, app, db, auth, setTaskToDone } from "../../firebase";
 // import { checkUserStatus } from "../../firebase";
 
 export function HomePage() {
@@ -16,30 +16,18 @@ export function HomePage() {
   const [user, authLoading, authError] = useAuthState(auth);
   const [content, setContent] = React.useState("");
   const [tasks, loading, error] = useCollection(
-    collection(db, "users", user.uid, "task"),
+    query(
+      collection(db, "users", user.uid, "tasks"),
+      where("status", "==", "ongoing")
+    ),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
-
-  // const dum = {
-  //   data: {
-  //     title: task,
-  //     description: taskDes,
-  //     deadline: new Date(date),
-  //     reminder: reminder.time,
-  //     tags: tags,
-  //     status: "ongoing",
-  //   },
-  // };
-
-  // const colors = [
-  //   { value: "All", label: "All" },
-  //   { value: "TA", label: "TA" },
-  //   { value: "High School", label: "High School" },
-  // ];
+  
   const { Meta } = Card;
   const onCheckBoxTick = (id) => {
+    setTaskToDone(id)
     console.log(`checked = ${id}`);
   };
 
@@ -177,26 +165,26 @@ export function HomePage() {
               <>
                 {tasks.docs.map((task) => (
                   <React.Fragment key={task.id}>
-                    {task.data().content.data.title && (
-                    <Card className="w-[90%] h-[75px]">
+                    {task.data().title && (
+                    <Card className="w-[90%] h-fit transition-all ease-in-out min-h-[75px]">
                       <Meta
-                        title={task.data().content.data.title}
+                        title={task.data().title}
                         description={`${
-                          new Date(task.data().content.data.deadline).getDate() +
+                          new Date(task.data().deadline).getDate() +
                           "/" +
-                          new Date(task.data().content.data.deadline).getMonth() +
+                          new Date(task.data().deadline).getMonth() +
                           "/" +
-                          new Date(task.data().content.data.deadline).getFullYear()
+                          new Date(task.data().deadline).getFullYear()
                         } - ${
-                          new Date(task.data().content.data.deadline).getHours() +
+                          new Date(task.data().deadline).getHours() +
                           ":" +
-                          new Date(task.data().content.data.deadline).getMinutes()
+                          new Date(task.data().deadline).getMinutes()
                         }`}
                       />
-                      {task.data().content.data.tags && (
-                        <div>
+                      {task.data().tags && (
+                        <div className="h-8">
 
-                          {task.data().content.data.tags.map((tag) => {
+                          {task.data().tags.map((tag) => {
                             return (
                               <Tag
                                 className="mt-2"
@@ -228,55 +216,6 @@ export function HomePage() {
                 ))}
               </>
             )}
-            {/* {tasks && (
-              <div>
-                {JSON.stringify(tasks.data())}
-                {tasks?.docs.map((task) => {
-                  <React.Fragment key={task.id}>
-                    {JSON.stringify(task.data())}
-                    <Card className="w-[90%] h-fit">
-                      <Meta
-                        title={task.data().title}
-                        description={`${
-                          new Date(task.data().deadline).getDate() +
-                          "/" +
-                          new Date(task.data().deadline).getMonth() +
-                          "/" +
-                          new Date(task.data().deadline).getFullYear()
-                        } - ${
-                          new Date(task.data().deadline).getHours() +
-                          ":" +
-                          new Date(task.data().deadline).getMinutes()
-                        }`}
-                      />
-                      {task.data().tags.map((tag) => {
-                        return (
-                          <Tag
-                            className="mt-2"
-                            color={
-                              PresetStatusColorTypes[
-                                Math.round(Math.random() * 100, 0) % 13
-                              ]
-                            }
-                          >
-                            {tag}
-                          </Tag>
-                        );
-                      })}
-
-                      <Checkbox
-                        className="task-fsn"
-                        onChange={() => onCheckBoxTick(task.id)}
-                      ></Checkbox>
-                      <text className="task-fn-mark" disabled>
-                        {" "}
-                        Mark as done{" "}
-                      </text>
-                    </Card>
-                  </React.Fragment>;
-                })}
-              </div>
-            )} */}
           </div>
         </div>
         <a href="/add">

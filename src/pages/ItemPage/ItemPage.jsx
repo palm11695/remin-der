@@ -14,7 +14,7 @@ export function ItemPage() {
   const [user, authLoading, authError] = useAuthState(auth);
   const [content, setContent] = React.useState('')
   const [value, loading, error] = useCollection(
-    collection(db, "users", user.uid, "task"),
+    collection(db, "users", user.uid, "tasks"),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
@@ -53,7 +53,7 @@ export function ItemPage() {
             <React.Fragment key={doc.id}>
               {doc.id}
               {/* {doc.data()} */}
-              {JSON.stringify(new Date(doc.data().content.data.deadline.second))},{"\n\n"}
+              {JSON.stringify(doc.data())},{"\n\n"}
               {/* {doc.data().content} {"\n\n"} */}
             </React.Fragment>
           ))}

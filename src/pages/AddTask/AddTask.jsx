@@ -177,8 +177,6 @@ export function AddTask() {
 
   const dum = [
     {
-      id: "udahfrghs9fhg", //DocRef.id
-      data: {
         title: "Task 1",
         description:
           "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
@@ -186,20 +184,17 @@ export function AddTask() {
         reminder: new Date(),
         tags: ["uni", "see"],
         status: "ongoing",
-      },
-    },
+    }
   ]
 
   const handleAdd = async () => {
     await addTask({
-      data: {
         title: task,
         description: taskDes,
         deadline: new Date(date).toString(),
         reminder: reminder.time,
         tags: tags,
         status: "ongoing",
-      },
     });
   };
 
