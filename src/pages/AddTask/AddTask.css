@@ -38,18 +38,33 @@
     @apply m-2 !important;
 }
 
+.cus-options {
+    @apply mr-2;
+    min-width: 2.5rem;
+}
+
 .cancel-button {
-    @apply bottom-px m-0 w-80 box-border h-11 w-80 inline-block px-6 py-2.5 bg-red-800 text-white rounded-lg !important;
+    @apply bottom-px m-0 box-border h-11 w-80 inline-block px-6 py-2.5 rounded-lg !important;
+    /* @apply bg-red-500 text-white !important; */
 } 
 
 .cancel-button:hover {
-    @apply bg-red-700 !important;
+    /* @apply bg-red-700 !important; */
 }
 
 .add-button {
-    @apply bottom-px m-5 w-80 box-border h-11 w-80 inline-block px-6 py-2.5 bg-black text-white rounded-lg !important;
+    @apply bottom-px mt-2 mb-4 w-80 box-border h-11 inline-block px-6 py-2.5 rounded-lg !important;
+    @apply bg-black text-white !important;
 } 
 
 .add-button:hover {
     @apply bg-neutral-800 !important;
+}
+
+.add-task-des {
+    @apply rounded-lg m-2 max-w-xs !important;
+}
+
+.add-task-upload {
+    @apply text-red-500;
 }

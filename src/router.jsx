@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { HomePage } from './pages/HomePage';
-import { AddTask } from './pages/AddTask';
+import { HomePage, AddTask, LoginPage, ItemPage } from './pages';
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" exact element={<HomePage />} />
-        <Route path="/add" exact element={<AddTask />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/view" element={<ItemPage />} />
+        <Route path="/add" element={<AddTask />} />
       </Routes>
     </BrowserRouter>
   );
