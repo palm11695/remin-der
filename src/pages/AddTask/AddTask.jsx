@@ -221,7 +221,10 @@ export function AddTask() {
           tag="p"
           text={taskDes} 
           onChange={handleDes}
-          options={{ toolbar: { buttons: ['bold', 'italic', 'underline'] } }}
+          options={{ 
+            toolbar: { buttons: ['bold', 'italic', 'underline'] },
+            placeholder: { text: 'Add description' } 
+          }}
         />
         
       </div>
