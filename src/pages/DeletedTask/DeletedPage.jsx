@@ -8,10 +8,7 @@ import {
   Checkbox,
   Input,
   Tooltip,
-  Modal,
 } from "antd";
-import "./HomePage.css";
-import { PresetColorTypes } from "antd/lib/_util/colors";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Navigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
@@ -21,14 +18,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { addTask, app, db, auth, setTaskToDone } from "../../firebase";
 // import { checkUserStatus } from "../../firebase";
 
-export function HomePage() {
+export function DeletedPage() {
   // console.log(checkUserStatus());
   const [user, authLoading, authError] = useAuthState(auth);
-  const [content, setContent] = React.useState({ content: "" });
+  const [content, setContent] = React.useState("");
   const [tasks, loading, error] = useCollection(
     query(
       collection(db, "users", user.uid, "tasks"),
-      where("status", "==", "ongoing")
+      where("status", "==", "deleted")
     ),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -36,10 +33,6 @@ export function HomePage() {
   );
 
   const { Meta } = Card;
-  const onCheckBoxTick = (id) => {
-    setTaskToDone(id);
-    console.log(`checked = ${id}`);
-  };
 
   const [tags, setTags] = useState([]);
   const [inputVisible, setInputVisible] = useState(false);
@@ -48,27 +41,6 @@ export function HomePage() {
   const [editInputValue, setEditInputValue] = useState("");
   const inputRef = useRef(null);
   const editInputRef = useRef(null);
-
-  const [modalLoading, setModalLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const showModal = (data) => {
-    setContent({
-      ...content,
-      content: data,
-    });
-    setOpenModal(true);
-  };
-  const handleOk = () => {
-    setModalLoading(true);
-    setTimeout(() => {
-      setModalLoading(false);
-      setOpenModal(false);
-    }, 3000);
-  };
-  const handleCancel = () => {
-    setOpenModal(false);
-  };
-
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -180,11 +152,7 @@ export function HomePage() {
               <>
                 {tasks.docs.map((task) => {
                   return (
-                    <Card
-                      className="w-[90%] h-fit min-h-[75px] hover:cursor-pointer hover:shadow-xl transition-all"
-                      key={task.id}
-                      onClick={() => showModal(task.data())}
-                    >
+                    <Card className="w-[90%] h-fit min-h-[75px]" key={task.id}>
                       <Meta
                         title={task.data().title}
                         description={`${
@@ -217,15 +185,6 @@ export function HomePage() {
                           })}
                         </>
                       )}
-
-                      <Checkbox
-                        className="task-fsn"
-                        onClick={() => onCheckBoxTick(task.id)}
-                      ></Checkbox>
-                      <p className="task-fn-mark" disabled>
-                        {" "}
-                        Mark as done{" "}
-                      </p>
                     </Card>
                   );
                 })}
@@ -233,40 +192,7 @@ export function HomePage() {
             )}
           </div>
         </div>
-        <a href="/add">
-          <Button
-            className="box-border h-11 sm:max-w-sm w-full inline-block px-6 py-2.5 bg-black text-white rounded-lg fixed bottom-4"
-            type="primary"
-          >
-            + Add new Task
-          </Button>
-        </a>
       </div>
-
-      <AddTaskButton />
-      <Modal
-        open={openModal}
-        title={content.content.title}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Close
-          </Button>,
-          <Button
-            key="submit"
-            type="danger"
-            className="bg-blue-500 text-white rounded-xl hover:bg-blue-300 border-blue-500 border-none hover:text-white"
-            loading={loading}
-            onClick={handleOk}
-          >
-            Edit
-          </Button>,
-        ]}
-      >
-        <p>{new Date(content.content.deadline).toString()}</p>
-        <p>{content.content.description}</p>
-      </Modal>
     </div>
   );
 }

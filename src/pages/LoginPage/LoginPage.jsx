@@ -1,10 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Button } from "antd";
-import "./LoginPage.css";
 import {
   signInWithGoogle,
-  signOutWithGoogle,
-  checkUserStatus,
 } from "../../firebase";
 import { Navigate } from "react-router-dom";
 
@@ -29,13 +26,13 @@ export function LoginPage() {
         eg. Button https://ant.design/components/button/
       */}
         <Button
-          className=" border-blue bg-blue-700 w-[150px] rounded-lg text-white h-[50px]"
+          className="border-blue-500 bg-blue-500 w-[150px] text-white h-[50px]"
           type="primary"
           onClick={handleSignIn}
         >
           <div className="flex flex-row items-center justify-center gap-2">
             Sign In with
-            <img src="icons8-google-48.png" className="h-[24px]"/>
+            <img src="icons8-google-48.png" alt="Google Icon" className="h-[24px]"/>
           </div>
         </Button>
       </div>
