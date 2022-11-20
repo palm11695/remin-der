@@ -127,7 +127,7 @@ export function FinishPage() {
     <div className="w-full h-full max-w-sm">
       {!auth && <Navigate to="/login" />}
       <Heading />
-      <PageSelection />
+      <PageSelection currentPage="Finished" />
 
       <div className="m-4">
         <Divider orientation="left">Finished Tasks</Divider>

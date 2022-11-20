@@ -127,7 +127,7 @@ export function DeletedPage() {
     <div className="w-full h-full max-w-sm">
       {!auth && <Navigate to="/login" />}
       <Heading />
-      <PageSelection />
+      <PageSelection currentPage="Recently Deleted" />
 
       <div className="m-4">
         <Divider orientation="left">Recently Deleted Tasks</Divider>

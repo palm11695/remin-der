@@ -176,7 +176,7 @@ export function HomePage() {
   return (
     <div className="w-full h-full max-w-sm">
       <Heading />
-      <PageSelection />
+      <PageSelection currentPage="Pending" />
 
       <div className="m-4">
         <Divider orientation="left">Filter</Divider>

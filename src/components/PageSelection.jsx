@@ -1,18 +1,22 @@
 import React from 'react';
 import { Button } from 'antd';
 
-export function PageSelection() {
+export function PageSelection(props) {
+
+  const pages = [
+    { path: "/", name:"Pending" },
+    { path: "/finish", name:"Finished" },
+    { path: "/delete", name:"Recently Deleted" }
+  ]
+
   return (
     <div className="flex flex-row justify-center items-center gap-2 mt-4">
-      <a href="/">
-      <Button>Pending</Button>
-      </a>
-      <a href="/finish">
-      <Button>Finished</Button>
-      </a>
-      <a href="/delete">
-      <Button>Recently Deleted</Button>
-      </a>
+      {pages.map((page) => {
+        return (
+          <a href={page.path}>
+            <Button className={ page.name === props.currentPage? "actived-btn": ""}>{page.name}</Button>
+          </a>
+      )})}
     </div>
   )
 }
