@@ -22,6 +22,10 @@ import {
   auth
 } from "../../firebase";
 import { Heading } from '../../components'
+import './AddTask.css'
+import 'medium-editor/dist/css/themes/default.css'
+import 'medium-editor/dist/css/medium-editor.css'
+import Editor from 'react-medium-editor';
 
 // import { tasks } from "./dummy";
 
@@ -100,7 +104,7 @@ export function AddTask() {
     setTask(e.target.value);
   };
   const handleDes = (e) => {
-    setDes(e.target.value);
+    setDes(e);
   };
 
   const handleClick = () => {
@@ -263,28 +267,17 @@ export function AddTask() {
             onChange={(e) => handleReminder(e.target.value)}
           /> */}
         </div>
-        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Description</Divider>
-        <span className="flex flex-row items-center justify-center gap-1 mt-0">
-          <Button className="str-bold">
-            <strong>B</strong>
-          </Button>
-          <Button className="str-em">
-            <em>I</em>
-          </Button>
-          <Button className="str-u">
-            <u>U</u>
-          </Button>
-        </span>
-
-        <TextArea
-          className="add-task-des w-full"
-          style={{ minHeight: "200px" }}
-          autoSize={{ minRows: 3, maxRows: 3 }}
-          placeholder="Add Description"
-          value={taskDes}
+        <Divider orientation="left" style={{margin: '0.5rem 0 0 0'}}>Description</Divider>
+        <p className="text-xs text-center text-gray-500 mb-1">A description can be customized <br/> with '<b>Bold</b>', '<i>Italic</i>', and '<u>Underline</u>'.</p>
+        <Editor 
+          tag="p"
+          text={taskDes} 
           onChange={handleDes}
+          options={{ 
+            toolbar: { buttons: ['bold', 'italic', 'underline'] },
+            placeholder: { text: 'Add description' } 
+          }}
         />
-        
         
       </div>
       <div className="fixed bottom-4 w-full max-w-sm px-6">

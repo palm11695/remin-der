@@ -24,3 +24,10 @@ code {
 .ant-tag {
   @apply h-fit !important;
 }
+
+.actived-btn {
+  @apply bg-blue-500;
+  @apply border-blue-500;
+  @apply text-white;
+  @apply font-bold;
+}

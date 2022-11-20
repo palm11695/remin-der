@@ -184,14 +184,8 @@ export const hardDeleteTask = async (docId) => {
 
 export const checkUserStatus = async () => {
   let isSignedIn = false;
-  console.log("start function");
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("still signed in");
-      isSignedIn = true;
-    } else {
-      console.log("was signed out");
-    }
+    if (user) isSignedIn = true;
   });
   
   return isSignedIn;

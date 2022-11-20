@@ -81,7 +81,7 @@ export function DeletedPage() {
   return (
     <div className="w-full h-full max-w-sm">
       <Heading />
-      <PageSelection />
+      <PageSelection currentPage="Recently Deleted" />
 
       <div className="m-4">
         <Divider orientation="left">Filter</Divider>

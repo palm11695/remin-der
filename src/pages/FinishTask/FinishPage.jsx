@@ -81,7 +81,7 @@ export function FinishPage() {
   return (
     <div className="w-full h-full max-w-sm">
       <Heading />
-      <PageSelection />
+      <PageSelection currentPage="Finished" />
 
       <div className="m-4">
         <Divider orientation="left">Filter</Divider>
