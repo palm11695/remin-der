@@ -1,1 +1,0 @@
-export { FinishPage } from "./FinishPage";

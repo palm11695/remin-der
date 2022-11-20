@@ -15,8 +15,6 @@ import {
 import { Navigate } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-import "./AddTask.css";
-import "./CustDes.css";
 import {
   signInWithGoogle,
   signOutWithGoogle,
