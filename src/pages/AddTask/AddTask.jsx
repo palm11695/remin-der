@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
-  Upload,
   Cascader,
   Divider,
   Input,
@@ -10,61 +9,20 @@ import {
   TimePicker,
   Tooltip,
   Modal,
-  Space,
 } from "antd";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
-  signInWithGoogle,
-  signOutWithGoogle,
   checkUserStatus,
 } from "../../firebase";
-
-import Heading from '../../components/Heading'
+import { Heading } from '../../components'
+import './AddTask.css'
 
 // import { tasks } from "./dummy";
 
 export function AddTask() {
   const auth = checkUserStatus();
-  const tasks = [
-    {
-      id: "udahfrghs9fhg", //DocRef.id
-      data: {
-        title: "Task 1",
-        content:
-          "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
-        deadline: new Date(),
-        reminder: new Date(),
-        tags: ["uni", "see"],
-        status: "ongoing",
-      },
-    },
-    {
-      id: "udahfrghs9fhg", //DocRef.id
-      data: {
-        title: "Task 1",
-        content:
-          "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
-        deadline: new Date(),
-        reminder: new Date(),
-        tags: ["uni", "see"],
-        status: "ongoing",
-      },
-    },
-    {
-      id: "udahfrghs9fhg", //DocRef.id
-      data: {
-        title: "Task 1",
-        content:
-          "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
-        deadline: new Date(),
-        reminder: new Date(),
-        tags: ["uni", "see"],
-        status: "ongoing",
-      },
-    },
-  ];
 
   const [task, setTask] = React.useState("");
   const [taskDes, setDes] = React.useState("");
@@ -134,19 +92,20 @@ export function AddTask() {
 
   const { confirm } = Modal;
 
+  const navigate = useNavigate();
+
   const handleCancelModal = () => {
     return confirm({
-      title: "Are you sure delete this task?",
+      title: "Are you sure to discard this task?",
       icon: <ExclamationCircleOutlined />,
-      content: "You can restore it later",
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
       onOk() {
-        console.log("OK");
+        navigate('/');
       },
-      onCancel() {
-        console.log("Cancel");
+      onCancel() { 
+        console.log('Cancel')
       },
     });
   }
@@ -156,20 +115,21 @@ export function AddTask() {
   }
 
   return (
-    <div className="w-full p-8">
+    <div className="w-full h-full max-w-sm">
       {!auth && <Navigate to="/login" />}
-      <div className="flex flex-col gap-2 max-w-sm mx-auto">
-        <Heading />
-        <Divider orientation="left">Title</Divider>
+      <Heading />
+
+      <div className="flex flex-col gap-2 max-w-sm mx-6">
+        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Title</Divider>
         <Input
           className="w-full"
-          placeholder="Add task"
+          placeholder="Task Title"
           value={task}
           onChange={handleChange}
         />
 
-        <Divider orientation="left">Tag</Divider>
-        <div className="flex flex-row flex-wrap gap-2 border p-4">
+        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Tag</Divider>
+        <div className="flex flex-row flex-wrap gap-2 border p-4 rounded-lg">
           {tags.map((tag, index) => {
             if (editInputIndex === index) {
               return (
@@ -233,7 +193,7 @@ export function AddTask() {
           )}
         </div>
 
-        <Divider orientation="left">Deadline</Divider>
+        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Deadline</Divider>
         <div className="flex flex-row justify-around items-center">
           <DatePicker className="dl-task-date" onChange={onChange} />
           <TimePicker
@@ -244,7 +204,7 @@ export function AddTask() {
           />
         </div>
 
-        <Divider orientation="left">Reminder</Divider>
+        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Reminder</Divider>
         <div className="flex flex-row justify-center items-center">
           <Cascader
             placeholder="Select Time"
@@ -252,7 +212,7 @@ export function AddTask() {
             changeOnSelect
           />
         </div>
-        <Divider orientation="left">Description</Divider>
+        <Divider orientation="left" style={{margin: '0.5rem 0'}}>Description</Divider>
         <span className="flex flex-row items-center justify-center gap-1 mt-0">
           <Button className="str-bold">
             <strong>B</strong>
@@ -266,26 +226,27 @@ export function AddTask() {
         </span>
 
         <TextArea
-          className="add-task-des"
-          // style={{ width: 337 }}
+          className="add-task-des w-full"
+          style={{ minHeight: "200px" }}
           autoSize={{ minRows: 3, maxRows: 3 }}
           placeholder="Add Description"
           value={taskDes}
           onChange={handleDes}
         />
-        <div className="flex flex-col gap-2 justify-center items-center w-full">
-          <Upload className="flex flex-row items-center justify-center">
-            <Button className="add-task-upload"> Click to Upload </Button>
-          </Upload>
+        
+        
+      </div>
+      <div className="fixed bottom-4 w-full max-w-sm px-6">
+        <div className="flex flex-row gap-2 justify-center items-center w-full">
           <Button
-            className="bg-red-700 hover:bg-red-500 text-white h-[50px] rounded-lg border-none w-full"
+            className="box-border border-red-500 h-11 sm:max-w-sm w-80 inline-block px-6 py-2.5 bg-red-500 hover:bg-red-300 text-white rounded-lg"
             type="primary"
             onClick={handleCancelModal}
           >
             Cancel
           </Button>
           <Button
-            className="bg-black hover:bg-gray-800 h-[50px] rounded-lg border-none w-full"
+            className="box-border border-black h-11 sm:max-w-sm w-80 inline-block px-6 py-2.5 bg-black text-white rounded-lg"
             type="primary"
             onClick={handleClick}
           >

@@ -17,7 +17,6 @@
   inset-block: 5% */
 }
 
-
 .log-out-task {
   @apply border-none drop-shadow-none ml-20 left-12 !important; 
 

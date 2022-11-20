@@ -1,14 +1,16 @@
-import React, {useState, useRef, useEffect} from "react";
-import { Divider, Cascader, Button, Card, Tag, Checkbox, Input, Tooltip } from "antd";
-import "./HomePage.css";
-import { PresetColorTypes } from "antd/lib/_util/colors";
+import React from "react";
+import { Divider, Card, Tag } from "antd";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Navigate } from 'react-router-dom'
-import { Heading, AddTaskButton, PageSelection } from '../../components'
-// import { checkUserStatus } from "../../firebase";
+import {
+  checkUserStatus,
+} from "../../firebase";
 
-export function HomePage() {
-  // console.log(checkUserStatus());
+import { Heading, PageSelection, AddTaskButton } from '../../components'
+
+export function DeletedPage() {
+  const auth = checkUserStatus();
+  console.log(auth);
   const tasks = [
     {
       id: "udahfrghs9fhg", //DocRef.id
@@ -119,133 +121,17 @@ export function HomePage() {
       },
     },
   ];
-  // const colors = [
-  //   { value: "All", label: "All" },
-  //   { value: "TA", label: "TA" },
-  //   { value: "High School", label: "High School" },
-  // ];
   const { Meta } = Card;
-  const onChange = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
-
-  const [tags, setTags] = useState([]);
-  const [inputVisible, setInputVisible] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [editInputIndex, setEditInputIndex] = useState(-1);
-  const [editInputValue, setEditInputValue] = useState("");
-  const inputRef = useRef(null);
-  const editInputRef = useRef(null);
-  useEffect(() => {
-    if (inputVisible) {
-      inputRef.current?.focus();
-    }
-  }, [inputVisible]);
-  useEffect(() => {
-    editInputRef.current?.focus();
-  }, [inputValue]);
-  const handleClose = (removedTag) => {
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
-    setTags(newTags);
-  };
-  const showInput = () => {
-    setInputVisible(true);
-  };
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-  const handleInputConfirm = () => {
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      setTags([...tags, inputValue]);
-    }
-    setInputVisible(false);
-    setInputValue("");
-  };
-  const handleEditInputChange = (e) => {
-    setEditInputValue(e.target.value);
-  };
-  const handleEditInputConfirm = () => {
-    const newTags = [...tags];
-    newTags[editInputIndex] = editInputValue;
-    setTags(newTags);
-    setEditInputIndex(-1);
-    setInputValue("");
-  };
 
   return (
     <div className="w-full h-full max-w-sm">
+      {!auth && <Navigate to="/login" />}
       <Heading />
       <PageSelection />
 
       <div className="m-4">
-        <Divider orientation="left">Filter</Divider>
-        <div className="flex flex-row flex-wrap gap-2 border rounded-md p-4 overflow-y-scroll m-4">
-          {tags.map((tag, index) => {
-            if (editInputIndex === index) {
-              return (
-                <Input
-                  ref={editInputRef}
-                  key={tag}
-                  size="small"
-                  value={editInputValue}
-                  onChange={handleEditInputChange}
-                  onBlur={handleEditInputConfirm}
-                  onPressEnter={handleEditInputConfirm}
-                />
-              );
-            }
-            const isLongTag = tag.length > 20;
-            const tagElem = (
-              <Tag
-                className=""
-                key={tag}
-                closable
-                onClose={() => handleClose(tag)}
-              >
-                <span
-                  onDoubleClick={(e) => {
-                    if (index !== 0) {
-                      setEditInputIndex(index);
-                      setEditInputValue(tag);
-                      e.preventDefault();
-                    }
-                  }}
-                >
-                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                </span>
-              </Tag>
-            );
-            return isLongTag ? (
-              <Tooltip title={tag} key={tag}>
-                {tagElem}
-              </Tooltip>
-            ) : (
-              tagElem
-            );
-          })}
-          {inputVisible && (
-            <Input
-              ref={inputRef}
-              type="text"
-              size="small"
-              value={inputValue}
-              onChange={handleInputChange}
-              onBlur={handleInputConfirm}
-              onPressEnter={handleInputConfirm}
-            />
-          )}
-          {!inputVisible && (
-            <Tag onClick={showInput}>
-              New Tag +
-            </Tag>
-          )}
-        </div>
-      </div>
-
-      <div className="m-4">
-        <Divider orientation="left">Tasks</Divider>
-        <div className="w-full max-h-[28rem] overflow-y-scroll">
+        <Divider orientation="left">Recently Deleted Tasks</Divider>
+        <div className="w-full max-h-[35rem] overflow-y-scroll">
           <div className="flex flex-col gap-2 items-center justify-center">
             {tasks.map((task) => {
               return (
@@ -278,20 +164,13 @@ export function HomePage() {
                       </Tag>
                     );
                   })}
-
-                  <Checkbox className="task-fsn" onChange={onChange}></Checkbox>
-                  <p className="task-fn-mark" disabled>
-                    {" "}
-                    Mark as done{" "}
-                  </p>
                 </Card>
               );
             })}
           </div>
         </div>
-        
       </div>
-
+      
       <AddTaskButton />
     </div>
   );
