@@ -11,6 +11,7 @@ import {
 } from "antd";
 import "./HomePage.css";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
+import { useNavigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
 import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -54,6 +55,8 @@ export function HomePage() {
 
   const [setModalLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
+  
   const showModal = (data, id) => {
     setContent({
       ...content,
@@ -61,7 +64,6 @@ export function HomePage() {
         "id": id, 
         "data": data },
     });
-    console.log(content);
     setOpenModal(true);
   };
   const handleOk = () => {
@@ -74,11 +76,15 @@ export function HomePage() {
   const handleCancel = () => {
     setOpenModal(false);
   };
-
   const handleDelete = (id) => {
     setOpenModal(false);
     softDeleteTask(id);
   };
+
+  const handleEditTask = () => {
+    navigate('/edit', { state: { content } })
+  }
+
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -257,8 +263,8 @@ export function HomePage() {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
-            Close
+          <Button key="edit" onClick={handleEditTask}>
+            Edit
           </Button>,
           <Button
             key="submit"
@@ -288,22 +294,28 @@ export function HomePage() {
 }
 
 function DateTimeFormatter(props) {
-  const { date } = props;
+  const { date } = props
+  const dateObj = new Date(date)
+
   return (
     <div className="pb-4">
       <span className="font-bold">Due Date: </span>
       <span>{`${
-        new Date(date).getDate() +
+        LeadingZero({number: dateObj.getDate()}) +
         "/" +
-        new Date(date).getMonth() +
+        LeadingZero({number: dateObj.getMonth()}) +
         "/" +
-        new Date(date).getFullYear()
+        dateObj.getFullYear()
         } - ${
-          new Date(date).getHours() +
+          LeadingZero({number:dateObj.getHours()}) +
           ":" +
-          new Date(date).getMinutes()
+          LeadingZero({number: dateObj.getMinutes()})
         }` || "No time"}
       </span>
     </div>
   );
+}
+
+function LeadingZero({number}) {
+  return parseInt(number) < 10 ? "0" + number : number
 }

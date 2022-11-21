@@ -64,18 +64,16 @@ export const addTask = async (content) => {
 };
 
 
-export const editTask = async (docId, content) => {
-  console.log("handle edit");
+export const editTask = async (props) => {
+  const { docId, content } = props;
+
   onAuthStateChanged(auth, async (user) => {
     if (user){
-      console.log("user valid");
       const uid = user.uid
       try {
-        console.log("user id: ", uid)
-        const docRef = await updateDoc(doc(db, "users", uid, "tasks", docId), 
+        await updateDoc(doc(db, "users", uid, "tasks", docId), 
           content
         )
-        console.log("Document update with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
       }
@@ -103,7 +101,7 @@ export const setTaskToDone = async (docId) => {
         );
         // console.log("Pass add doc");
         // await deleteDoc(doc(db, "users", uid, "tasks", docId));
-        console.log("Document set to done with ID: ", docRef.id);
+        // console.log("Document set to done with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
       }
@@ -128,7 +126,7 @@ export const softDeleteTask = async (docId) => {
         await updateDoc(doc(db, "users", uid, "tasks", docId), 
           data
         );
-        console.log("Document soft delete with ID: ", docRef.id);
+        // console.log("Document soft delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
       }
@@ -151,7 +149,7 @@ export const restoreDeleteTask = async (docId) => {
         data.status = "ongoing";
         console.log(data.status);
         await updateDoc(doc(db, "users", uid, "tasks", docId), data);
-        console.log("Document restore delete with ID: ", docRef.id);
+        // console.log("Document restore delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
       }
@@ -169,8 +167,8 @@ export const hardDeleteTask = async (docId) => {
       const uid = user.uid;
       try {
         console.log("user id: ", uid);
-        const docRef = await deleteDoc(doc(db, "users", uid, "tasks", docId));
-        console.log("Document hard delete with ID: ", docRef.id);
+        await deleteDoc(doc(db, "users", uid, "tasks", docId));
+        // console.log("Document hard delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
       }
