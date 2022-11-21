@@ -2,10 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Loading } from './components'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase';
-import { HomePage, AddTask, LoginPage, FinishPage, DeletedPage, ItemPage } from './pages';
+import { HomePage, AddTask, LoginPage, FinishPage, DeletedPage } from './pages';
 
 export default function AppRouter() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   if (loading) {
     return <Loading />
   }
@@ -19,7 +19,6 @@ export default function AppRouter() {
         <Route path="/add" exact element={<AddTask />} />
         <Route path="/finish" exact element={<FinishPage />} />
         <Route path="/delete" exact element={<DeletedPage />} />
-        <Route path="/test" exact element={<ItemPage />} />
       </Routes>
     </BrowserRouter>
   );
