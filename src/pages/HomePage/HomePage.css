@@ -17,7 +17,6 @@
   inset-block: 5% */
 }
 
-
 .log-out-task {
   @apply border-none drop-shadow-none ml-20 left-12 !important; 
 
@@ -28,7 +27,7 @@
 }
 
 .new-task-button {
-  @apply bottom-px m-5 w-80 box-border h-11 w-80 inline-block px-6 py-2.5 bg-black text-white rounded-lg !important;
+  @apply bottom-px m-5 box-border h-11 w-80 inline-block px-6 py-2.5 bg-black text-white rounded-lg !important;
 } 
 
 .new-task-button:hover {
@@ -68,4 +67,10 @@
 .task-fn-mark {
   @apply absolute top-10 right-1 italic;
   color: grey;
+}
+
+.show-editor {
+  @apply p-2;
+  @apply border border-black rounded-lg;
+  border-color: #e5e7eb;
 }

@@ -16,3 +16,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.ant-tag, .ant-input, .ant-button, .ant-picker, .ant-select-selector, .ant-btn, .ant-card {
+  @apply rounded-lg !important;
+}
+
+.ant-tag {
+  @apply h-fit !important;
+}
+
+.actived-btn {
+  @apply bg-blue-500;
+  @apply border-blue-500;
+  @apply text-white;
+  @apply font-bold;
+}

@@ -8,37 +8,25 @@ import {
   Checkbox,
   Input,
   Tooltip,
-  Modal,
 } from "antd";
-import "./HomePage.css";
-import { PresetColorTypes } from "antd/lib/_util/colors";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Navigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
 import { getFirestore, collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  addTask,
-  app,
-  db,
-  auth,
-  setTaskToDone,
-  softDeleteTask,
-} from "../../firebase";
-import "medium-editor/dist/css/themes/default.css";
-import "medium-editor/dist/css/medium-editor.css";
-import Editor from "react-medium-editor";
+import { addTask, app, db, auth, restoreDeleteTask, hardDeleteTask} from "../../firebase";
+import { UndoOutlined, DeleteOutlined } from "@ant-design/icons";
 // import { checkUserStatus } from "../../firebase";
 
-export function HomePage() {
+export function DeletedPage() {
   // console.log(checkUserStatus());
   const [user, authLoading, authError] = useAuthState(auth);
   const [content, setContent] = React.useState("");
   const [tasks, loading, error] = useCollection(
     query(
       collection(db, "users", user.uid, "tasks"),
-      where("status", "==", "ongoing")
+      where("status", "==", "deleted")
     ),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -46,10 +34,6 @@ export function HomePage() {
   );
 
   const { Meta } = Card;
-  const onCheckBoxTick = (id) => {
-    setTaskToDone(id);
-    console.log(`checked = ${id}`);
-  };
 
   const [tags, setTags] = useState([]);
   const [inputVisible, setInputVisible] = useState(false);
@@ -58,34 +42,6 @@ export function HomePage() {
   const [editInputValue, setEditInputValue] = useState("");
   const inputRef = useRef(null);
   const editInputRef = useRef(null);
-
-  const [modalLoading, setModalLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const showModal = (data, id) => {
-    setContent({
-      ...content,
-      content: { 
-        "id": id, 
-        "data": data },
-    });
-    console.log(content);
-    setOpenModal(true);
-  };
-  const handleOk = () => {
-    setModalLoading(true);
-    setTimeout(() => {
-      setModalLoading(false);
-      setOpenModal(false);
-    }, 3000);
-  };
-  const handleCancel = () => {
-    setOpenModal(false);
-  };
-
-  const handleDelete = (id) => {
-    setOpenModal(false);
-    softDeleteTask(id);
-  };
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -123,10 +79,18 @@ export function HomePage() {
     setInputValue("");
   };
 
+  const handleRestore = (id) => {
+    restoreDeleteTask(id)
+  }
+
+  const handleDelete = (id) => {
+    hardDeleteTask(id)
+  }
+
   return (
     <div className="w-full h-full max-w-sm">
       <Heading />
-      <PageSelection currentPage="Pending" />
+      <PageSelection currentPage="Recently Deleted" />
 
       <div className="m-4">
         <Divider orientation="left">Filter</Divider>
@@ -197,55 +161,51 @@ export function HomePage() {
               <>
                 {tasks.docs.map((task) => {
                   return (
-                    <Card
-                      className="w-[90%] h-fit min-h-[75px] hover:cursor-pointer hover:shadow-xl transition-all"
-                      key={task.id}
-                      onClick={() => showModal(task.data(), task.id)}
-                    >
-                      <Meta
-                        title={task.data().title}
-                        description={`${
-                          new Date(task.data().deadline).getDate() +
-                          "/" +
-                          new Date(task.data().deadline).getMonth() +
-                          "/" +
-                          new Date(task.data().deadline).getFullYear()
-                        } - ${
-                          new Date(task.data().deadline).getHours() +
-                          ":" +
-                          new Date(task.data().deadline).getMinutes()
-                        }`}
-                      />
-                      {task.data().tags && (
-                        <>
-                          {task.data().tags.map((tag) => {
-                            return (
-                              <Tag
-                                className="mt-2"
-                                color={
-                                  PresetStatusColorTypes[
-                                    Math.round(Math.random() * 100, 0) % 13
-                                  ]
-                                }
-                              >
-                                {tag}
-                              </Tag>
-                            );
-                          })}
-                        </>
-                      )}
-
-                      <Checkbox
-                        className="task-fsn"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onCheckBoxTick(task.id)
-                        }}
-                      ></Checkbox>
-                      <p className="task-fn-mark" disabled>
-                        {" "}
-                        Mark as done{" "}
-                      </p>
+                    <Card className="w-[90%] h-fit min-h-[75px]" key={task.id}>
+                      <div className="flex flex-row ">
+                        <div className="flex-grow">
+                          <Meta
+                            title={task.data().title}
+                            description={`${
+                              new Date(task.data().deadline).getDate() +
+                              "/" +
+                              new Date(task.data().deadline).getMonth() +
+                              "/" +
+                              new Date(task.data().deadline).getFullYear()
+                            } - ${
+                              new Date(task.data().deadline).getHours() +
+                              ":" +
+                              new Date(task.data().deadline).getMinutes()
+                            }`}
+                          />
+                          {task.data().tags && (
+                            <>
+                              {task.data().tags.map((tag) => {
+                                return (
+                                  <Tag
+                                    className="mt-2"
+                                    color={
+                                      PresetStatusColorTypes[
+                                        Math.round(Math.random() * 100, 0) % 13
+                                      ]
+                                    }
+                                  >
+                                    {tag}
+                                  </Tag>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                        <div className="flex flex-row gap-2 items-center justify-center">
+                          <Button onClick={() => handleRestore(task.id)}>
+                            <UndoOutlined />
+                          </Button>
+                          <Button onClick={() => handleDelete(task.id)}>
+                            <DeleteOutlined />
+                          </Button>
+                        </div>
+                      </div>
                     </Card>
                   );
                 })}
@@ -254,63 +214,6 @@ export function HomePage() {
           </div>
         </div>
       </div>
-
-      <AddTaskButton />
-      {content && (
-
-      <Modal
-        open={openModal}
-        title={content.content.data.title || "No title"}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Close
-          </Button>,
-          <Button
-            key="submit"
-            type="danger"
-            className="bg-red-500 text-white rounded-xl hover:bg-red-300 border-red-500 border-none hover:text-white"
-            loading={loading}
-            onClick={() => handleDelete(content.content.id)}
-          >
-            Delete
-          </Button>,
-        ]}
-      >
-        <DateTimeFormatter date={content.content.data.deadline} />
-        
-        <Editor
-          className="show-editor"
-          text={content.content.data.description}
-          options={{
-            disableEditing: true,
-            placeholder: false,
-          }}
-        />
-      </Modal>
-      )}
-    </div>
-  );
-}
-
-function DateTimeFormatter(props) {
-  const { date } = props;
-  return (
-    <div className="pb-4">
-      <span className="font-bold">Due Date: </span>
-      <span>{`${
-        new Date(date).getDate() +
-        "/" +
-        new Date(date).getMonth() +
-        "/" +
-        new Date(date).getFullYear()
-        } - ${
-          new Date(date).getHours() +
-          ":" +
-          new Date(date).getMinutes()
-        }` || "No time"}
-      </span>
     </div>
   );
 }
