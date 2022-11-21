@@ -9,6 +9,7 @@ import {
   getDocs,
   deleteDoc,
   getDoc,
+  doc,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
@@ -23,51 +24,22 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBY8A-cNp3N2hqZ5FccLbHBR53ZSEz-ojI",
-  authDomain: "reminder-se.firebaseapp.com",
-  projectId: "reminder-se",
-  storageBucket: "reminder-se.appspot.com",
-  messagingSenderId: "703603214281",
-  appId: "1:703603214281:web:31f8911434405c637b4a18",
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_sorageBucket,
+  messagingSenderId: process.env.REACT_APP_messageSenderId,
+  appId: process.env.REACT_APP_appId,
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 export const provider = new GoogleAuthProvider();
 export const auth = getAuth();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-export const getAllTask = async () => {
-  console.log("handle get");
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      console.log("user valid");
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const uid = user.uid;
-      try {
-        console.log("user id: ", uid);
-        const q = query(
-          collection(db, "users", uid, "task")
-        );
-        const allTask = (await getDocs(q)).docs.map((e) => (e = e.data()));
-        if (allTask.length === 0){
-          console.log("no task");
-        } else {
-          console.log("task retreive")
-        }
-        return allTask
-      } catch (e) {
-        console.log(e.message);
-      }
-    } else {
-      // User is signed out
-      console.log("user not valid");
-    }
-  });
-}
 
 export const addTask = async (content) => {
   console.log("handle add");
@@ -79,9 +51,9 @@ export const addTask = async (content) => {
       const uid = user.uid;
       try {
         console.log("user id: ", uid);
-        const docRef = await addDoc(collection(db, "users", uid, "task"), {
+        const docRef = await addDoc(collection(db, "users", uid, "tasks"), 
           content
-        });
+        );
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
@@ -102,9 +74,9 @@ export const editTask = async (docId, content) => {
       const uid = user.uid
       try {
         console.log("user id: ", uid)
-        const docRef = await updateDoc(collection(db, "users", uid, "tasks", docId), {
+        const docRef = await updateDoc(doc(db, "users", uid, "tasks", docId), 
           content
-        })
+        )
         console.log("Document update with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
@@ -116,6 +88,33 @@ export const editTask = async (docId, content) => {
   
 }
 
+export const setTaskToDone = async (docId) => {
+  console.log("handle set to done");
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("user valid");
+      const uid = user.uid;
+      try {
+        console.log("user id: ", uid);
+        const docRef = await getDoc(doc(db, "users", uid, "tasks", docId));
+        let data = docRef.data();
+        data.status = "done";
+        console.log(data.status);
+        await updateDoc(doc(db, "users", uid, "tasks", docId), 
+          data,
+        );
+        // console.log("Pass add doc");
+        // await deleteDoc(doc(db, "users", uid, "tasks", docId));
+        console.log("Document set to done with ID: ", docRef.id);
+      } catch (e) {
+        console.log(e.message);
+      }
+    } else {
+      console.log("user not valid");
+    }
+  });
+}
+
 export const softDeleteTask = async (docId) => {
   console.log("handle soft delete");
   onAuthStateChanged(auth, async (user) => {
@@ -124,12 +123,13 @@ export const softDeleteTask = async (docId) => {
       const uid = user.uid;
       try {
         console.log("user id: ", uid);
-        const docRef = await getDoc(collection(db, "users", uid, "tasks", docId));
-        const data = docRef.data()
-        await addDoc(collection(db, "users", uid, "deletes", docId), {
+        const docRef = await getDoc(doc(db, "users", uid, "tasks", docId));
+        let data = docRef.data()
+        data.status = "deleted"
+        console.log(data.status);
+        await updateDoc(doc(db, "users", uid, "tasks", docId), 
           data
-        });
-        await deleteDoc(collection(db, "users", uid, "tasks", docId));
+        );
         console.log("Document soft delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
@@ -148,14 +148,11 @@ export const restoreDeleteTask = async (docId) => {
       const uid = user.uid;
       try {
         console.log("user id: ", uid);
-        const docRef = await getDoc(
-          collection(db, "users", uid, "deletes", docId)
-        );
-        const data = docRef.data();
-        await addDoc(collection(db, "users", uid, "tasks", docId), {
-          data,
-        });
-        await deleteDoc(collection(db, "users", uid, "deletes", docId));
+        const docRef = await getDoc(doc(db, "users", uid, "tasks", docId));
+        let data = docRef.data();
+        data.status = "ongoing";
+        console.log(data.status);
+        await updateDoc(doc(db, "users", uid, "tasks", docId), data);
         console.log("Document restore delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
@@ -174,7 +171,7 @@ export const hardDeleteTask = async (docId) => {
       const uid = user.uid;
       try {
         console.log("user id: ", uid);
-        const docRef = await deleteDoc(collection(db, "users", uid, "deletes", docId));
+        const docRef = await deleteDoc(doc(db, "users", uid, "tasks", docId));
         console.log("Document hard delete with ID: ", docRef.id);
       } catch (e) {
         console.log(e.message);
@@ -185,41 +182,48 @@ export const hardDeleteTask = async (docId) => {
   });
 };
 
-export const checkUserStatus = () => {
+export const checkUserStatus = async () => {
+  let isSignedIn = false;
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("still signed in");
-    } else {
-      console.log("was signed out");
-    }
+    if (user) isSignedIn = true;
   });
+  
+  return isSignedIn;
+
+  // On dev env
+  // return true
 };
 
 export const signInWithGoogle = async () => {
-  await signInWithRedirect(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      console.log("signed in success");
-      const user = result.user;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      console.log("error occured when signed in");
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
+  const aauth = await signInWithRedirect(auth, provider)
+    // .then((result) => {
+    //   // This gives you a Google Access Token. You can use it to access the Google API.
+    //   const credential = GoogleAuthProvider.credentialFromResult(result);
+    //   const token = credential.accessToken;
+    //   // The signed-in user info.
+    //   console.log("signed in success");
+    //   const user = result.user;
+    //   sessionStorage.setItem("user", JSON.stringify(user));
+    //   // ...
+    // })
+    // .catch((error) => {
+    //   // Handle Errors here.
+    //   const errorCode = error.code;
+    //   const errorMessage = error.message;
+    //   // The email of the user's account used.
+    //   const email = error.customData.email;
+    //   console.log("error occured when signed in");
+    //   // The AuthCredential type that was used.
+    //   const credential = GoogleAuthProvider.credentialFromError(error);
+    //   // ...
+    // }).finally(() => {
+    //   console.log("end function");
+    // });
+    // console.log("auth", aauth);
 };
 
 export const signOutWithGoogle = async () => {
   await signOut(auth);
+  sessionStorage.removeItem("user");
   console.log("signed out");
 };
