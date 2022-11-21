@@ -20,19 +20,20 @@ export function LoginPage() {
     <div className="w-full h-[100vh]">
       {auth && <Navigate to="/" />}
       <div className="flex flex-col gap-2 max-w-sm mx-auto items-center justify-center h-full">
-        <div className="text-center text-xl font-bold">Remind เด้อ</div>
+        <img src="logo192.png" alt="Reminder Logo" className="h-[5rem] mr-2 drop-shadow-lg"/>
+        <div className="text-center text-xl font-bold">Remind-เด้อ</div>
         {/*
         You can see document of each component in https://ant.design/components/overview/ 
         eg. Button https://ant.design/components/button/
       */}
         <Button
-          className="border-blue-500 bg-blue-500 w-[150px] text-white h-[50px]"
+          className="border-white bg-white w-fit text-white h-[50px] shadow"
           type="primary"
           onClick={handleSignIn}
         >
-          <div className="flex flex-row items-center justify-center gap-2">
-            Sign In with
-            <img src="icons8-google-48.png" alt="Google Icon" className="h-[24px]"/>
+          <div className="flex flex-row items-center justify-center gap-2 text-gray-800 font-medium">
+            <img src="icons8-google-48.png" alt="Google Icon" className="h-[24px] drop-shadow-lg"/>
+            Sign in with Google
           </div>
         </Button>
       </div>
