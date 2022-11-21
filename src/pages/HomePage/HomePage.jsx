@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   Divider,
-  Cascader,
   Button,
   Card,
   Tag,
@@ -11,16 +10,12 @@ import {
   Modal,
 } from "antd";
 import "./HomePage.css";
-import { PresetColorTypes } from "antd/lib/_util/colors";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
-import { Navigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
-import { getFirestore, collection, query, where } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
-  addTask,
-  app,
   db,
   auth,
   setTaskToDone,
@@ -29,13 +24,11 @@ import {
 import "medium-editor/dist/css/themes/default.css";
 import "medium-editor/dist/css/medium-editor.css";
 import Editor from "react-medium-editor";
-// import { checkUserStatus } from "../../firebase";
 
 export function HomePage() {
-  // console.log(checkUserStatus());
-  const [user, authLoading, authError] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [content, setContent] = React.useState("");
-  const [tasks, loading, error] = useCollection(
+  const [tasks, loading] = useCollection(
     query(
       collection(db, "users", user.uid, "tasks"),
       where("status", "==", "ongoing")
@@ -59,7 +52,7 @@ export function HomePage() {
   const inputRef = useRef(null);
   const editInputRef = useRef(null);
 
-  const [modalLoading, setModalLoading] = useState(false);
+  const [setModalLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const showModal = (data, id) => {
     setContent({

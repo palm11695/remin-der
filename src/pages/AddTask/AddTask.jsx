@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
-  Upload,
   Divider,
   Dropdown,
   Input,
@@ -13,21 +12,14 @@ import {
 } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
 import { ExclamationCircleOutlined, DownOutlined } from "@ant-design/icons";
-import TextArea from "antd/lib/input/TextArea";
 import {
-  signInWithGoogle,
-  signOutWithGoogle,
   checkUserStatus,
-  addTask,
-  auth
-} from "../../firebase";
+  addTask} from "../../firebase";
 import { Heading } from '../../components'
 import './AddTask.css'
 import 'medium-editor/dist/css/themes/default.css'
 import 'medium-editor/dist/css/medium-editor.css'
 import Editor from 'react-medium-editor';
-
-// import { tasks } from "./dummy";
 
 export function AddTask() {
   const auth = checkUserStatus();
@@ -36,7 +28,6 @@ export function AddTask() {
   const [taskDes, setDes] = React.useState("");
   const [date, setDate] = React.useState("");
   const [reminder, setReminder] = React.useState({"time": "None"});
-  // const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
   const items = [
     { key: "None", label: "None" },
@@ -107,12 +98,6 @@ export function AddTask() {
     setDes(e);
   };
 
-  const handleClick = () => {
-    console.log("Button clicked");
-    console.log(task);
-    console.log(taskDes);
-  };
-
   const { confirm } = Modal;
 
   const navigate = useNavigate();
@@ -138,22 +123,7 @@ export function AddTask() {
     console.log(date, dateString);
   }
 
-  function handleReminder(value) {
-    setReminder(value);
-    console.log(`selected ${value}`);
-  }
 
-  const dum = [
-    {
-        title: "Task 1",
-        description:
-          "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.",
-        deadline: new Date(),
-        reminder: new Date(),
-        tags: ["uni", "see"],
-        status: "ongoing",
-    }
-  ]
 
   const handleAdd = async () => {
     await addTask({

@@ -1,29 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   Divider,
-  Cascader,
   Button,
   Card,
   Tag,
-  Checkbox,
   Input,
   Tooltip,
 } from "antd";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
-import { Navigate } from "react-router-dom";
-import { Heading, AddTaskButton, PageSelection } from "../../components";
-import { getFirestore, collection, query, where } from "firebase/firestore";
+import { Heading, PageSelection } from "../../components";
+import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { addTask, app, db, auth, restoreDeleteTask, hardDeleteTask} from "../../firebase";
+import { db, auth, restoreDeleteTask, hardDeleteTask} from "../../firebase";
 import { UndoOutlined, DeleteOutlined } from "@ant-design/icons";
-// import { checkUserStatus } from "../../firebase";
 
 export function DeletedPage() {
-  // console.log(checkUserStatus());
-  const [user, authLoading, authError] = useAuthState(auth);
-  const [content, setContent] = React.useState("");
-  const [tasks, loading, error] = useCollection(
+  const [user] = useAuthState(auth);
+  const [tasks] = useCollection(
     query(
       collection(db, "users", user.uid, "tasks"),
       where("status", "==", "deleted")
