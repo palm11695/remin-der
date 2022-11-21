@@ -40,7 +40,7 @@ export function AddTask() {
 
   const items = [
     { key: "None", label: "None" },
-    { key: "30 min", label: "30 min" },
+    { key: "30 mins", label: "30 mins" },
     { key: "1 hours", label: "1 hours" },
     { key: "2 hours", label: "2 hours" },
   ];
@@ -159,11 +159,12 @@ export function AddTask() {
     await addTask({
         title: task || "Untitled",
         description: taskDes || "No description",
-        deadline:  date == "" ? new Date().toString(): new Date(date).toString(),
+        deadline:  date === "" ? new Date().toString(): new Date(date).toString(),
         reminder: reminder.time,
         tags: tags,
         status: "ongoing",
     });
+    navigate('/');
   };
 
   return (

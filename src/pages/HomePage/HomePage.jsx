@@ -278,20 +278,11 @@ export function HomePage() {
           </Button>,
         ]}
       >
-        <p className="pb-4">{`${
-          new Date(content.content.data.deadline).getDate() +
-          "/" +
-          new Date(content.content.data.deadline).getMonth() +
-          "/" +
-          new Date(content.content.data.deadline).getFullYear()
-        } - ${
-          new Date(content.content.data.deadline).getHours() +
-          ":" +
-          new Date(content.content.data.deadline).getMinutes()
-        }` || "No time"}</p>
+        <DateTimeFormatter date={content.content.data.deadline} />
+        
         <Editor
           className="show-editor"
-          text={content.content.description}
+          text={content.content.data.description}
           options={{
             disableEditing: true,
             placeholder: false,
@@ -299,6 +290,27 @@ export function HomePage() {
         />
       </Modal>
       )}
+    </div>
+  );
+}
+
+function DateTimeFormatter(props) {
+  const { date } = props;
+  return (
+    <div className="pb-4">
+      <span className="font-bold">Due Date: </span>
+      <span>{`${
+        new Date(date).getDate() +
+        "/" +
+        new Date(date).getMonth() +
+        "/" +
+        new Date(date).getFullYear()
+        } - ${
+          new Date(date).getHours() +
+          ":" +
+          new Date(date).getMinutes()
+        }` || "No time"}
+      </span>
     </div>
   );
 }

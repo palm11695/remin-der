@@ -1,4 +1,4 @@
-.medium-editor-element {
+p.medium-editor-element {
   @apply p-2;
   @apply border border-black rounded-lg;
   border-color: #e5e7eb;
