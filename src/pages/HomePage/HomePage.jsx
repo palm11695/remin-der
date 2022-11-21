@@ -203,17 +203,7 @@ export function HomePage() {
                     >
                       <Meta
                         title={task.data().title}
-                        description={`${
-                          new Date(task.data().deadline).getDate() +
-                          "/" +
-                          new Date(task.data().deadline).getMonth() +
-                          "/" +
-                          new Date(task.data().deadline).getFullYear()
-                        } - ${
-                          new Date(task.data().deadline).getHours() +
-                          ":" +
-                          new Date(task.data().deadline).getMinutes()
-                        }`}
+                        description={<DateTimeFormatter date={task.data().deadline}/>}
                       />
                       {task.data().tags && (
                         <>
@@ -294,7 +284,7 @@ export function HomePage() {
   );
 }
 
-function DateTimeFormatter(props) {
+export function DateTimeFormatter(props) {
   const { date } = props
   const dateObj = new Date(date)
 
@@ -317,6 +307,6 @@ function DateTimeFormatter(props) {
   );
 }
 
-function LeadingZero({number}) {
+export function LeadingZero({number}) {
   return parseInt(number) < 10 ? "0" + number : number
 }
