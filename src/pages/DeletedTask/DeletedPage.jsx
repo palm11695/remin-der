@@ -9,6 +9,7 @@ import {
 } from "antd";
 import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Heading, PageSelection } from "../../components";
+import { DateTimeFormatter } from "../HomePage/HomePage"
 import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -160,17 +161,7 @@ export function DeletedPage() {
                         <div className="flex-grow">
                           <Meta
                             title={task.data().title}
-                            description={`${
-                              new Date(task.data().deadline).getDate() +
-                              "/" +
-                              new Date(task.data().deadline).getMonth() +
-                              "/" +
-                              new Date(task.data().deadline).getFullYear()
-                            } - ${
-                              new Date(task.data().deadline).getHours() +
-                              ":" +
-                              new Date(task.data().deadline).getMinutes()
-                            }`}
+                            description={<DateTimeFormatter date={task.data().deadline}/>}
                           />
                           {task.data().tags && (
                             <>
