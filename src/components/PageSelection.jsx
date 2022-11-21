@@ -14,7 +14,10 @@ export function PageSelection(props) {
       {pages.map((page) => {
         return (
           <a href={page.path}>
-            <Button className={ page.name === props.currentPage? "actived-btn": ""}>{page.name}</Button>
+            <Button 
+              className={ page.name === props.currentPage? "actived-btn": ""}
+              key={ page.key }
+            >{page.name}</Button>
           </a>
       )})}
     </div>

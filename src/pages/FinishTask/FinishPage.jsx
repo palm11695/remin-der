@@ -165,6 +165,7 @@ export function FinishPage() {
                           {task.data().tags.map((tag) => {
                             return (
                               <Tag
+                                key={tag}
                                 className="mt-2"
                                 color={
                                   PresetStatusColorTypes[
