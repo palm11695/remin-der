@@ -4,9 +4,9 @@ import { Button } from 'antd';
 export function PageSelection(props) {
 
   const pages = [
-    { path: "/", name:"Pending" },
-    { path: "/finish", name:"Finished" },
-    { path: "/delete", name:"Recently Deleted" }
+    { key: "Homepage", path: "/", name:"Pending" },
+    { key: "Finish", path: "/finish", name:"Finished" },
+    { key: "Delete", path: "/delete", name:"Recently Deleted" }
   ]
 
   return (
