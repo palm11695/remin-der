@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateTimeFormatter should match the snapshot 1`] = `
+<div
+  className="pb-4"
+>
+  <span
+    className="font-bold"
+  >
+    Due Date: 
+  </span>
+  <span>
+    24/10/2022 - 00:04
+  </span>
+</div>
+`;
+
+exports[`DateTimeFormatter should match when date is null 1`] = `
+<div
+  className="pb-4"
+>
+  <span
+    className="font-bold"
+  >
+    Due Date: 
+  </span>
+  <span>
+    01/00/1970 - 07:00
+  </span>
+</div>
+`;
+
+exports[`LeadingZero should match when number < 10 1`] = `"01"`;
+
+exports[`LeadingZero should match when number >= 10 1`] = `"10"`;
