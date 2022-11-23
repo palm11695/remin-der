@@ -10,7 +10,6 @@ import {
   Modal,
 } from "antd";
 import "./HomePage.css";
-import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { useNavigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
 import { collection, query, where } from "firebase/firestore";
@@ -28,15 +27,16 @@ import Editor from "react-medium-editor";
 
 export function HomePage() {
   const [user] = useAuthState(auth);
+  const uid = user? user.uid : null;
   const [content, setContent] = React.useState("");
-  const [tasks, loading] = useCollection(
-    query(
-      collection(db, "users", user.uid, "tasks"),
-      where("status", "==", "ongoing")
-    ),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
+      const [tasks, loading] = useCollection(
+        query(
+          collection(db, "users", uid, "tasks"),
+          where("status", "==", "ongoing")
+        ),
+        {
+          snapshotListenOptions: { includeMetadataChanges: true },
+        }
   );
 
   const { Meta } = Card;
@@ -105,8 +105,10 @@ export function HomePage() {
     setInputValue(e.target.value);
   };
   const handleInputConfirm = () => {
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      setTags([...tags, inputValue]);
+    if (inputValue && tags) {
+      if (tags.indexOf(inputValue) === -1) {
+        setTags([...tags, inputValue]);
+      }
     }
     setInputVisible(false);
     setInputValue("");
@@ -212,11 +214,6 @@ export function HomePage() {
                               <Tag
                                 key={tag}
                                 className="mt-2"
-                                color={
-                                  PresetStatusColorTypes[
-                                    Math.round(Math.random() * 100, 0) % 13
-                                  ]
-                                }
                               >
                                 {tag}
                               </Tag>
@@ -301,7 +298,7 @@ export function DateTimeFormatter(props) {
           LeadingZero({number:dateObj.getHours()}) +
           ":" +
           LeadingZero({number: dateObj.getMinutes()})
-        }` || "No time"}
+        }`}
       </span>
     </div>
   );

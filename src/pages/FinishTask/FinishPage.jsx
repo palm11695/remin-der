@@ -6,7 +6,6 @@ import {
   Input,
   Tooltip,
 } from "antd";
-import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { Heading, PageSelection } from "../../components";
 import { DateTimeFormatter } from "../HomePage/HomePage"
 import { collection, query, where } from "firebase/firestore";
@@ -158,11 +157,6 @@ export function FinishPage() {
                               <Tag
                                 key={tag}
                                 className="mt-2"
-                                color={
-                                  PresetStatusColorTypes[
-                                    Math.round(Math.random() * 100, 0) % 13
-                                  ]
-                                }
                               >
                                 {tag}
                               </Tag>
