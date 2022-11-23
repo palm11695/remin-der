@@ -10,8 +10,10 @@ import {
   Modal,
 } from "antd";
 import "./HomePage.css";
+import { PresetStatusColorTypes } from "antd/es/_util/colors";
 import { useNavigate } from "react-router-dom";
 import { Heading, AddTaskButton, PageSelection } from "../../components";
+import { DateTimeFormatter } from "../../utils";
 import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -214,6 +216,11 @@ export function HomePage() {
                               <Tag
                                 key={tag}
                                 className="mt-2"
+                                color={
+                                  PresetStatusColorTypes[
+                                    Math.round(Math.random() * 100, 0) % 13
+                                  ]
+                                }
                               >
                                 {tag}
                               </Tag>
@@ -279,31 +286,4 @@ export function HomePage() {
       )}
     </div>
   );
-}
-
-export function DateTimeFormatter(props) {
-  const { date } = props
-  const dateObj = new Date(date)
-
-  return (
-    <div className="pb-4">
-      <span className="font-bold">Due Date: </span>
-      <span>{`${
-        LeadingZero({number: dateObj.getDate()}) +
-        "/" +
-        LeadingZero({number: dateObj.getMonth()}) +
-        "/" +
-        dateObj.getFullYear()
-        } - ${
-          LeadingZero({number:dateObj.getHours()}) +
-          ":" +
-          LeadingZero({number: dateObj.getMinutes()})
-        }`}
-      </span>
-    </div>
-  );
-}
-
-export function LeadingZero({number}) {
-  return parseInt(number) < 10 ? "0" + number : number
 }

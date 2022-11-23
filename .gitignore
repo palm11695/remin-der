@@ -177,3 +177,6 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/node,macos
 
 build/
+
+# JEST snapshots
+public/src/__tests__/__snapshots__/

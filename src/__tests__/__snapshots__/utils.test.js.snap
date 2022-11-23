@@ -10,7 +10,7 @@ exports[`DateTimeFormatter should match the snapshot 1`] = `
     Due Date: 
   </span>
   <span>
-    23/10/2022 - 21:12
+    24/10/2022 - 00:04
   </span>
 </div>
 `;
