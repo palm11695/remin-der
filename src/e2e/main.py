@@ -64,7 +64,7 @@ def test_login():
     sleep(10)
     assert driver.find_element(By.XPATH, "//h1[1]").text == "Remind-เด้อ"
     # sleep(999)
-    print("Login Success")
+    print("Test login: passed")
     sleep(5)
     driver.quit()
 
@@ -139,7 +139,7 @@ def test_addtask():
     sleep(5)
     
     assert driver.find_element(By.XPATH, "//div[@class='ant-card-body']").is_displayed()
-    print("Test add task passed")
+    print("Test add task: passed")
        
 def test_removetask():
     
@@ -160,7 +160,7 @@ def test_removetask():
     driver.get("http://remin-der.th1.proen.cloud/delete")
     sleep(5)
     assert driver.find_element(By.XPATH, "//div[@class='ant-card-body']").is_displayed()
-    print("Test delete task passed")
+    print("Test delete task: passed")
     driver.quit()
 
 test_addtask()
