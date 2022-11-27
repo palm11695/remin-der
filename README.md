@@ -1,20 +1,21 @@
-## Remin เด้อ
+# Remind-เด้อ
 
-Remin เด้อ is a website that  allows user to orgranize their tasks depending on their style with a highly customizable remidner.The website is for students and office workers who want to mange their time, keep track of their task, and want to use an alternative reminder platform
+*Remind-เด้อ is a website that allows user to organize their tasks depending on their style with a highly customizable reminder. <br>
+The website is for students and office workers who want to manage their time, keep track of their tasks, and want to use an alternative reminder platform.* http://remin-der.th1.proen.cloud/
 
-## Technology used for development
+## Technology used for Development
 
-To create our website we use **React framework** along with **ant design** which is an enterprise-class UI design language and React UI library. We use **Google Authentication Service** as the method for user to login. We also use Google's **Firebase** as our database. 
+To create our website we use [**React.js**](https://reactjs.org/) as a framework along with [**Ant Design**](https://ant.design/) which is an enterprise-class UI design language and React UI library. We use **Google Authentication Service** as the method for users to log in. We also use Google's [**Firebase**](https://firebase.google.com/) as our database. 
 
-## Tools used for testing
+## Tools used for Testing
 
 To test our website we used the following tools
- - **Unit testing** - We use **Jest** which is JavaScript testing framework.
-  - **Autmoated UI Testing** - We use **Selenium WebDriver** which is a tool for doing UI test on **Chrome**.
+ - **Unit testing** - We use [**Jest**](https://jestjs.io/) which is JavaScript testing framework.
+  - **Automated UI Testing** - We use [**Selenium WebDriver**](https://www.selenium.dev/documentation/webdriver/) which is a tool for doing UI test on [**Chrome**](https://www.google.com/chrome/).
 
-## Lessons learned
+## Lesson Learned (In part of QA)
 
-From creating test of our website we have learned that Jest is very suitable for React application since Jest is can be easily intergated with React and have a function to do test coeverage. We also learn about Selenium WebDriver and how to use its to do automated ui testing. 
+From creating a test of our website, we have learned that Jest is very suitable for React application since Jest can be easily integrated with React and have a function to do test coverage. We also learned about Selenium WebDriver and how to use it to do automated UI testing. 
 
 ## Running application
 
@@ -38,9 +39,9 @@ Your app is ready to be deployed!
 
 ### `npm test`
 
-To launches our test in watch mode.
+To launches the testing in watch mode.
 
 ### `npm test-coverage`
 
-To display our test coverage.
+To launches the testing and display the test coverage. *(CI also run test-coverage command)*
 
