@@ -21,33 +21,6 @@ load_dotenv()
 GOOGLE_USERNAME = os.getenv("GOOGLE_USERNAME")
 GOOGLE_PASSWORD = os.getenv("GOOGLE_PASSWORD")
 
-# start driver
-driver = uc.Chrome(use_subprocess=True)
-wait = WebDriverWait(driver, 10)
-
-driver.get("http://remin-der.th1.proen.cloud/")
-# driver.get("http://localhost:3000/")
-
-driver.implicitly_wait(10)
-
-login_button = driver.find_element(By.XPATH, "//button[1]")
-login_button.click()
-
-# username_input = driver.find_element(By.XPATH, "//input[@id='Email']")
-username_input = driver.find_element(By.XPATH, "//input[@name='identifier']")
-username_input.send_keys(GOOGLE_USERNAME)
-username_input.send_keys(Keys.ENTER)
-
-# password_input = driver.find_element(By.XPATH, "//input[@id='Password']")
-password_input = driver.find_element(By.XPATH, "//input[@name='password']")
-password_input.send_keys(GOOGLE_PASSWORD)
-password_input.send_keys(Keys.ENTER)
-sleep(10)
-assert driver.find_element(By.XPATH, "//h1[1]").text == "Remind-เด้อ"
-    # sleep(999)
-print("Test login passed")
-sleep(5)
-#driver.quit()
 
 def test_login():
     # driver = webdriver.Chrome(ChromeDriverManager.install())
@@ -93,6 +66,36 @@ def test_login():
     # sleep(999)
     print("Login Success")
     sleep(5)
+    driver.quit()
+
+# test login only
+test_login()
+
+# start driver
+driver = uc.Chrome(use_subprocess=True)
+wait = WebDriverWait(driver, 10)
+
+driver.get("http://remin-der.th1.proen.cloud/")
+# driver.get("http://localhost:3000/")
+
+driver.implicitly_wait(10)
+
+login_button = driver.find_element(By.XPATH, "//button[1]")
+login_button.click()
+
+# username_input = driver.find_element(By.XPATH, "//input[@id='Email']")
+username_input = driver.find_element(By.XPATH, "//input[@name='identifier']")
+username_input.send_keys(GOOGLE_USERNAME)
+username_input.send_keys(Keys.ENTER)
+
+# password_input = driver.find_element(By.XPATH, "//input[@id='Password']")
+password_input = driver.find_element(By.XPATH, "//input[@name='password']")
+password_input.send_keys(GOOGLE_PASSWORD)
+password_input.send_keys(Keys.ENTER)
+sleep(10)
+#driver.quit()
+
+
 
 def test_addtask():
   
@@ -160,35 +163,6 @@ def test_removetask():
     print("Test delete task passed")
     driver.quit()
 
-def test_loginX():
-    sleep(5)
-    driver.get("http://remin-der.th1.proen.cloud/")
-    
-    # click logout button
-    logout_button = driver.find_element(By.XPATH, "//button[1]")
-    logout_button.click()
-    
-    # login again
-    sleep(5)
-    login_button = driver.find_element(By.XPATH, "//button[1]")
-    login_button.click()
-
-    sleep(3)
-    username_input = driver.find_element(By.XPATH, "//input[@name='identifier']")
-    username_input.send_keys(GOOGLE_USERNAME)
-    username_input.send_keys(Keys.ENTER)
-
-    password_input = driver.find_element(By.XPATH, "//input[@name='password']")
-    password_input.send_keys(GOOGLE_PASSWORD)
-    password_input.send_keys(Keys.ENTER)
-    
-    sleep(5)
-    assert driver.find_element(By.XPATH, "//h1[1]").text == "Remind-เด้อ"
-    # sleep(999)
-    print("Login Success")
-    sleep(5)
-    driver.quit()
-
 test_addtask()
 test_removetask()
-#test_login()
+
