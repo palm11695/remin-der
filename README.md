@@ -45,3 +45,4 @@ To launches the testing in watch mode.
 
 To launches the testing and display the test coverage. *(CI also run test-coverage command)*
 
+
